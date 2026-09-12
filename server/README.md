@@ -7,12 +7,26 @@ hand.
 
 ```
 src/main/java/gg/sanitycapped/emotes/
-  core/    naming, image inspection, hashes, EmoteService (the rules live here)
-  store/   SQLite via JdbcClient, plus images on local disk
+  config/  AppProperties (validated) and the Clock bean
+  emote/   Emote, its repository, the image store, and EmoteService — the rules
+  image/   decoding, type sniffing, SHA-256 and the perceptual hash
+  naming/  trigger words, ported from tools/build_emotes.py
   github/  the only outbound calls: commit, delete, list, latest release
-  web/     controllers, passcode checks, error shape
-src/main/resources/static/   browse, upload and admin pages (no build step)
+  web/     EmoteView, passcodes, error mapping
+    api/     JSON endpoints for the forms
+    view/    PageController, which renders the three pages
+src/main/resources/
+  templates/layout/base.html   the shared chrome every page decorates
+  templates/{browse,upload,admin}.html
+  static/css, static/js        one stylesheet, one module per page
 ```
+
+Browse is rendered by Thymeleaf from the database, so it works with JavaScript
+off; its script only does search and copy-to-clipboard. Upload and admin are
+forms that talk to the JSON API.
+
+Domain failures are thrown as `EmoteException` subtypes and mapped to statuses in
+one place (`web/ApiErrorHandler`), so the service never mentions HTTP.
 
 Java 21, SQLite, images on a local volume. No database server and nothing to
 provision.

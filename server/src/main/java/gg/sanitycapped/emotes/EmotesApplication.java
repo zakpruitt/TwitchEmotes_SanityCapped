@@ -6,15 +6,15 @@ import java.nio.file.Path;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 @SpringBootApplication
-@EnableConfigurationProperties(AppProperties.class)
+@ConfigurationPropertiesScan
 public class EmotesApplication {
 
     public static void main(String[] args) throws IOException {
-        // SQLite won't create the directory its file lives in, and the datasource
-        // is built before any bean of ours could do it.
+        // SQLite will not create the directory its file lives in, and the
+        // datasource is built before any bean of ours could do it.
         Files.createDirectories(Path.of(System.getenv().getOrDefault("DATA_DIR", "./data")));
         SpringApplication.run(EmotesApplication.class, args);
     }

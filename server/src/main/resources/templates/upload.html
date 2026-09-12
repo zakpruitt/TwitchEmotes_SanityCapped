@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: page(~{::title}, 'upload', ~{::main}, ~{::scripts})}">
+<head>
+  <title>Upload an emote</title>
+</head>
+<body>
+
+<main class="narrow">
+  <h1>Upload an emote</h1>
+  <p class="sub">
+    GIF, PNG, WebP or JPEG, up to <span th:text="${maxMegabytes}">2</span> MB.
+    It goes into a queue and ships to everyone once it's approved.
+  </p>
+
+  <form class="card" id="upload-form" autocomplete="off">
+    <label class="drop" id="drop" for="file">
+      <span id="drop-text">Drop an image here, or click to pick one</span>
+      <img id="preview" alt="" hidden>
+    </label>
+    <input type="file" id="file" name="file" hidden
+           accept="image/gif,image/png,image/webp,image/jpeg">
+
+    <label class="field">
+      <span>Emote name</span>
+      <input type="text" id="name" name="name" placeholder="peepoHmm">
+    </label>
+    <p class="hint" id="trigger"></p>
+    <p class="chatline" id="chat-preview" hidden></p>
+
+    <label class="field">
+      <span>Your name</span>
+      <input type="text" id="uploader" name="uploader" placeholder="Whoever you are in guild chat">
+    </label>
+
+    <label class="field">
+      <span>Guild passcode</span>
+      <input type="password" id="passcode" autocomplete="current-password">
+    </label>
+
+    <div class="actions">
+      <button type="submit" id="submit" disabled>Submit for approval</button>
+      <button type="button" class="ghost" id="reset">Clear</button>
+    </div>
+
+    <p class="msg" id="message" role="status"></p>
+  </form>
+</main>
+
+<th:block th:fragment="scripts">
+  <script type="module" th:src="@{/js/upload.js}"></script>
+</th:block>
+
+</body>
+</html>

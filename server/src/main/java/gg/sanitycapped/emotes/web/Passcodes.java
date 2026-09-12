@@ -7,14 +7,16 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Component;
 
-import gg.sanitycapped.emotes.AppProperties;
+import gg.sanitycapped.emotes.config.AppProperties;
 
 /**
  * Two shared passcodes: one handed out in guild chat so people can upload, one
- * kept by whoever approves. Sent as an X-Passcode header by the pages.
+ * kept by whoever approves. The pages send whichever they have as X-Passcode.
  */
 @Component
 public class Passcodes {
+
+    private static final String HEADER = "X-Passcode";
 
     private final AppProperties props;
 
@@ -33,18 +35,18 @@ public class Passcodes {
 
     public void requireGuild(HttpServletRequest request) {
         if (!isGuild(request)) {
-            throw ApiException.unauthorized("Wrong passcode.");
+            throw new NotAllowedException("Wrong passcode.");
         }
     }
 
     public void requireAdmin(HttpServletRequest request) {
         if (!isAdmin(request)) {
-            throw ApiException.unauthorized("Admin passcode required.");
+            throw new NotAllowedException("Admin passcode required.");
         }
     }
 
     private static String given(HttpServletRequest request) {
-        String header = request.getHeader("X-Passcode");
+        String header = request.getHeader(HEADER);
         return header == null ? "" : header;
     }
 

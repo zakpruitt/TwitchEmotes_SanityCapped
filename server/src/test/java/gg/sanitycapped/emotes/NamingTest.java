@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import gg.sanitycapped.emotes.core.Naming;
+import gg.sanitycapped.emotes.naming.Naming;
 
 /**
  * The expected values come from running sanitize()/apply_prefix() in
