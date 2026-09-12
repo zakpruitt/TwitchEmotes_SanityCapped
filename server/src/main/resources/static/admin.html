@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Emote queue</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div id="nav"></div>
+  <main>
+    <h1>Approval queue</h1>
+    <p class="sub">Approving commits the image to the repo, which builds and publishes a release on its own.</p>
+
+    <div class="card" id="gate">
+      <label class="field" style="margin:0">
+        <span>Admin passcode</span>
+        <input type="password" id="pass" autocomplete="current-password" />
+      </label>
+      <div style="margin-top:14px"><button id="unlock">Unlock</button></div>
+      <div class="msg" id="gateMsg"></div>
+    </div>
+
+    <div id="panel" hidden>
+      <div class="toolbar">
+        <span class="tag" id="pendingCount"></span>
+        <span class="tag" id="releaseTag"></span>
+        <button class="ghost" id="refresh">Refresh</button>
+        <button class="ghost" id="resync" title="Adopt anything added to the repo by hand">Sync from repo</button>
+      </div>
+      <div id="queue"></div>
+
+      <h1 style="font-size:20px;margin-top:38px">In the pack</h1>
+      <p class="sub">Removing one commits a delete and rebuilds the addon without it.</p>
+      <div class="grid" id="approved"></div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { api, header, store, timeAgo, toast } from "/app.js";
+
+    document.getElementById("nav").innerHTML = header("admin");
+
+    const $ = (id) => document.getElementById(id);
+    let pass = store.admin;
+
+    async function unlock(quiet) {
+      pass = $("pass").value || pass;
+      if (!pass) return;
+      try {
+        const s = await api("/api/session", { pass });
+        if (!s.admin) throw new Error("That passcode isn't the admin one.");
+        store.admin = pass;
+        $("gate").hidden = true;
+        $("panel").hidden = false;
+        load();
+      } catch (err) {
+        if (!quiet) toast($("gateMsg"), err.message, "err");
+      }
+    }
+
+    $("unlock").onclick = () => unlock(false);
+    $("pass").addEventListener("keydown", (e) => e.key === "Enter" && unlock(false));
+    $("refresh").onclick = () => load();
+    $("resync").onclick = async (ev) => {
+      ev.target.disabled = true;
+      try {
+        const r = await api("/api/admin/resync", { method: "POST", pass });
+        alert(r.added ? `Adopted ${r.added} emote(s) from the repo.` : "Already up to date.");
+        load();
+      } catch (err) { alert(err.message); }
+      ev.target.disabled = false;
+    };
+
+    async function load() {
+      const [{ pending }, { emotes }, status] = await Promise.all([
+        api("/api/admin/pending", { pass }),
+        api("/api/emotes"),
+        api("/api/status"),
+      ]);
+
+      $("pendingCount").textContent = `${pending.length} waiting`;
+      $("releaseTag").innerHTML = status.release
+        ? `shipped <a href="${status.release.url}" target="_blank" rel="noopener">${status.release.tag}</a>`
+        : "no release yet";
+
+      $("queue").innerHTML = pending.length
+        ? pending.map(card).join("")
+        : `<div class="empty">Nothing waiting. Quiet guild.</div>`;
+
+      $("approved").innerHTML = emotes
+        .map(
+          (e) => `
+          <div class="emote">
+            <img src="${e.url}" alt="${e.name}" loading="lazy" />
+            <div class="name">${e.name}</div>
+            <div class="by">by ${e.uploader}</div>
+            <button class="danger" style="margin-top:8px;padding:5px 10px" data-remove="${e.id}" data-name="${e.name}">Remove</button>
+          </div>`
+        )
+        .join("");
+    }
+
+    function card(e) {
+      return `
+        <div class="card pending" data-id="${e.id}">
+          <img src="${e.url}" alt="${e.name}" />
+          <div class="meta">
+            <div style="font-weight:600">${e.name}</div>
+            <div class="by" style="color:var(--muted);font-size:12px">
+              by ${e.uploader} · ${timeAgo(e.createdAt)}
+            </div>
+            ${e.note ? `<div class="tag warn" style="margin-top:6px">${e.note}</div>` : ""}
+            <div class="chatline" style="margin-top:10px;max-width:320px">
+              <span>[Guild]</span><img src="${e.url}" alt="" /><span>${e.name}</span>
+            </div>
+          </div>
+          <div class="actions">
+            <input type="text" placeholder="rename (optional)" data-rename style="width:150px" />
+            <button class="ok" data-approve>Approve</button>
+            <button class="danger" data-reject>Reject</button>
+          </div>
+        </div>`;
+    }
+
+    $("queue").addEventListener("click", async (ev) => {
+      const row = ev.target.closest(".pending");
+      if (!row) return;
+      const id = row.dataset.id;
+      const rename = row.querySelector("[data-rename]").value.trim();
+
+      if (ev.target.matches("[data-approve]")) {
+        ev.target.disabled = true;
+        ev.target.textContent = "Committing…";
+        try {
+          const r = await api(`/api/admin/${id}`, {
+            method: "POST",
+            pass,
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ action: "approve", name: rename || undefined }),
+          });
+          row.outerHTML = `<div class="card" style="padding:12px"><span style="color:var(--good)">${r.name} approved — the release is building.</span></div>`;
+          load();
+        } catch (err) {
+          ev.target.disabled = false;
+          ev.target.textContent = "Approve";
+          alert(err.message);
+        }
+      }
+
+      if (ev.target.matches("[data-reject]")) {
+        const reason = prompt("Reason (optional, just for your own records):") ?? "";
+        try {
+          await api(`/api/admin/${id}`, {
+            method: "POST",
+            pass,
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ action: "reject", reason }),
+          });
+          load();
+        } catch (err) { alert(err.message); }
+      }
+    });
+
+    $("approved").addEventListener("click", async (ev) => {
+      const btn = ev.target.closest("[data-remove]");
+      if (!btn) return;
+      if (!confirm(`Remove ${btn.dataset.name} from the pack? This publishes an update without it.`)) return;
+      btn.disabled = true;
+      try {
+        await api(`/api/admin/${btn.dataset.remove}`, { method: "DELETE", pass });
+        load();
+      } catch (err) {
+        btn.disabled = false;
+        alert(err.message);
+      }
+    });
+
+    if (pass) { $("pass").value = pass; unlock(true); }
+  </script>
+</body>
+</html>

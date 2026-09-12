@@ -1,0 +1,27 @@
+spring:
+  application.name: sanity-capped-emotes
+  datasource:
+    url: jdbc:sqlite:${app.data-dir}/emotes.db?busy_timeout=5000
+    driver-class-name: org.sqlite.JDBC
+    hikari:
+      # SQLite takes one writer at a time; a single connection avoids SQLITE_BUSY.
+      maximum-pool-size: 1
+  sql.init.mode: always
+  servlet.multipart:
+    max-file-size: 4MB
+    max-request-size: 5MB
+  threads.virtual.enabled: true
+
+server.port: ${PORT:8080}
+
+app:
+  data-dir: ${DATA_DIR:./data}
+  guild-passcode: ${GUILD_PASSCODE:letmein}
+  admin-passcode: ${ADMIN_PASSCODE:change-me}
+  github-repo: ${GITHUB_REPO:zakpruitt/TwitchEmotes_SanityCapped}
+  github-token: ${GITHUB_TOKEN:}
+  max-upload-bytes: 2097152
+  similar-threshold: 6
+  uploads-per-hour: 10
+
+logging.level.gg.sanitycapped: INFO

@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Upload an emote</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div id="nav"></div>
+  <main style="max-width:620px">
+    <h1>Upload an emote</h1>
+    <p class="sub">GIF, PNG, WebP or JPEG, up to 2 MB. It goes into a queue and ships to everyone once approved.</p>
+
+    <div class="card">
+      <div class="drop" id="drop">
+        <div id="dropText">Drop an image here, or click to pick one</div>
+        <img id="preview" hidden alt="" />
+      </div>
+      <input type="file" id="file" accept="image/gif,image/png,image/webp,image/jpeg" hidden />
+
+      <label class="field">
+        <span>Emote name</span>
+        <input type="text" id="name" placeholder="peepoHmm" autocomplete="off" />
+      </label>
+      <div id="trigger" class="sub" style="margin:8px 0 0;font-size:13px"></div>
+      <div id="chat" class="chatline" hidden style="margin-top:10px"></div>
+
+      <label class="field">
+        <span>Your name</span>
+        <input type="text" id="uploader" placeholder="Whoever you are in guild chat" autocomplete="off" />
+      </label>
+
+      <label class="field">
+        <span>Guild passcode</span>
+        <input type="password" id="pass" autocomplete="current-password" />
+      </label>
+
+      <div style="margin-top:18px;display:flex;gap:10px">
+        <button id="submit" disabled>Submit for approval</button>
+        <button class="ghost" id="reset" type="button">Clear</button>
+      </div>
+      <div class="msg" id="msg"></div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { api, header, store, sha256Hex, toast } from "/app.js";
+    import { triggerWord } from "/naming.js";
+
+    document.getElementById("nav").innerHTML = header("upload");
+
+    const els = Object.fromEntries(
+      ["drop", "dropText", "preview", "file", "name", "trigger", "chat", "uploader", "pass", "submit", "reset", "msg"]
+        .map((id) => [id, document.getElementById(id)])
+    );
+
+    els.pass.value = store.pass;
+    els.uploader.value = localStorage.getItem("uploader") || "";
+
+    let file = null;
+    let sha = null;
+
+    function pickName() {
+      return els.name.value.trim() || (file ? file.name.replace(/\.[^.]+$/, "") : "");
+    }
+
+    async function refresh() {
+      const name = triggerWord(pickName());
+      els.trigger.innerHTML = name
+        ? `In chat you'll type <strong style="color:var(--text)">${name}</strong>`
+        : "";
+      els.chat.hidden = !(name && file);
+      if (!els.chat.hidden) {
+        els.chat.innerHTML = `<span>[Guild] You:</span> <img src="${els.preview.src}" alt="" /> <span>${name}</span>`;
+      }
+      els.submit.disabled = !(file && name && els.uploader.value.trim() && els.pass.value);
+
+      if (!name && !sha) return;
+      try {
+        const params = new URLSearchParams({ name, sha: sha || "" });
+        const r = await api(`/api/check?${params}`);
+        if (r.exact) {
+          toast(els.msg, `That exact image is already in the pack as ${r.exact}.`, "err");
+          els.submit.disabled = true;
+        } else if (r.nameTaken) {
+          toast(els.msg, `${r.name} is ${r.nameTaken === "approved" ? "already in the pack" : "already waiting for approval"}. Pick another name.`, "err");
+          els.submit.disabled = true;
+        } else if (r.similar) {
+          toast(els.msg, `Heads up: this looks a lot like ${r.similar}. You can still submit it.`, "warn");
+        } else {
+          els.msg.textContent = "";
+          els.msg.className = "msg";
+        }
+      } catch { /* the server checks again on submit */ }
+    }
+
+    async function take(f) {
+      if (!f) return;
+      if (f.size > 2 * 1024 * 1024) return toast(els.msg, "That image is over 2 MB.", "err");
+      file = f;
+      els.preview.src = URL.createObjectURL(f);
+      els.preview.hidden = false;
+      els.dropText.textContent = `${f.name} · ${(f.size / 1024).toFixed(0)} KB`;
+      sha = await sha256Hex(f);
+      refresh();
+    }
+
+    els.drop.onclick = () => els.file.click();
+    els.file.onchange = () => take(els.file.files[0]);
+    els.drop.ondragover = (e) => { e.preventDefault(); els.drop.classList.add("over"); };
+    els.drop.ondragleave = () => els.drop.classList.remove("over");
+    els.drop.ondrop = (e) => {
+      e.preventDefault();
+      els.drop.classList.remove("over");
+      take(e.dataTransfer.files[0]);
+    };
+
+    ["name", "uploader", "pass"].forEach((id) => els[id].addEventListener("input", refresh));
+
+    els.reset.onclick = () => {
+      file = null;
+      sha = null;
+      els.file.value = "";
+      els.preview.hidden = true;
+      els.dropText.textContent = "Drop an image here, or click to pick one";
+      els.name.value = "";
+      refresh();
+    };
+
+    els.submit.onclick = async () => {
+      els.submit.disabled = true;
+      store.pass = els.pass.value;
+      localStorage.setItem("uploader", els.uploader.value.trim());
+
+      const body = new FormData();
+      body.append("file", file);
+      body.append("name", pickName());
+      body.append("uploader", els.uploader.value.trim());
+
+      try {
+        const r = await api("/api/emotes", { method: "POST", body, pass: els.pass.value });
+        toast(els.msg, `${r.name} is in the queue. It'll show up in the addon once it's approved.`, "ok");
+        els.reset.onclick();
+      } catch (err) {
+        toast(els.msg, err.message, "err");
+        els.submit.disabled = false;
+      }
+    };
+
+    refresh();
+  </script>
+</body>
+</html>

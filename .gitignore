@@ -5,3 +5,5 @@ dist/
 .dev.vars
 web/scripts/seed.sql
 web/scripts/seed_r2.sh
+server/target/
+server/data/

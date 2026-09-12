@@ -177,7 +177,7 @@ plain text `scCopiumChad`. Someone without the pack just sees that word.
 
 ## Adding emotes without the build step
 
-The guild uploads at the emote site (`web/`, on Cloudflare Pages). An upload sits
+The guild uploads at the emote site (`server/`, a Spring Boot app). An upload sits
 in a queue until it's approved; approving commits the image into `tools/source/`
 here, and `.github/workflows/release.yml` rebuilds the textures, bumps the
 version, and publishes a release. Nobody needs Python or a zip file.
