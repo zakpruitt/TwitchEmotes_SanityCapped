@@ -1,0 +1,109 @@
+name: Build and release
+
+# Approving an emote on the website commits an image into tools/source/, which
+# lands here. Rapid approvals collapse into one release via the concurrency group.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/source/**'
+      - 'tools/emotes.json'
+  workflow_dispatch:
+
+concurrency:
+  group: release
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - run: pip install pillow
+
+      - name: Build emote textures
+        run: python tools/build_emotes.py
+
+      - name: Stamp version
+        id: ver
+        run: |
+          VERSION="1.${{ github.run_number }}"
+          sed -i -E "s/^## Version:.*/## Version: ${VERSION}/" TwitchEmotes_SanityCapped.toc
+          INTERFACE=$(sed -nE 's/^## Interface:[[:space:]]*([0-9]+).*/\1/p' TwitchEmotes_SanityCapped.toc | head -1)
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "interface=${INTERFACE}" >> "$GITHUB_OUTPUT"
+
+      - name: Commit generated files
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Emotes EmoteData.lua tools/manifest.json TwitchEmotes_SanityCapped.toc
+          if git diff --cached --quiet; then
+            echo "Nothing regenerated."
+          else
+            git commit -m "Build ${{ steps.ver.outputs.version }} [skip ci]"
+            git push
+          fi
+
+      - name: Package
+        id: pkg
+        run: |
+          VERSION="${{ steps.ver.outputs.version }}"
+          ZIP="TwitchEmotes_SanityCapped-${VERSION}.zip"
+          rm -rf dist && mkdir -p dist/TwitchEmotes_SanityCapped
+          rsync -a --exclude '.git' --exclude '.github' --exclude 'web' \
+                   --exclude 'dist' --exclude 'tools/source' \
+                   ./ dist/TwitchEmotes_SanityCapped/
+          (cd dist && zip -qr "../${ZIP}" TwitchEmotes_SanityCapped)
+          # release.json is what WoWUp reads to pick the right asset for retail.
+          cat > release.json <<JSON
+          {
+            "releases": [
+              {
+                "name": "TwitchEmotes_SanityCapped",
+                "version": "${VERSION}",
+                "filename": "${ZIP}",
+                "nolib": false,
+                "metadata": [
+                  { "flavor": "mainline", "interface": ${{ steps.ver.outputs.interface }} }
+                ]
+              }
+            ]
+          }
+          JSON
+          echo "zip=${ZIP}" >> "$GITHUB_OUTPUT"
+
+      - name: Release notes
+        id: notes
+        run: |
+          {
+            echo "Emotes in this build (\`$(python -c "import json;print(json.load(open('tools/manifest.json'))['count'])")\` total):"
+            echo
+            python - <<'PY'
+          import json
+          for e in json.load(open("tools/manifest.json"))["emotes"]:
+              print(f"- `{e['name']}`" + (" (animated)" if e["animated"] else ""))
+          PY
+            echo
+            echo "Install or update with WoWUp: **Get Addons -> Install from URL** -> \`${{ github.server_url }}/${{ github.repository }}\`"
+          } > notes.md
+
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "v${{ steps.ver.outputs.version }}" \
+            "${{ steps.pkg.outputs.zip }}" release.json \
+            --title "v${{ steps.ver.outputs.version }}" \
+            --notes-file notes.md \
+            --target "$(git rev-parse HEAD)"

@@ -1,0 +1,15 @@
+{
+  "_comment": "Copy this to emotes.json and edit. Keys can be the source filename (without extension), the cleaned name, or the final prefixed name. Every field is optional.",
+
+  "OOOO-128": {
+    "name": "scOOOO",
+    "framerate": 20,
+    "pingpong": true
+  },
+  "cloudzUlt-128": {
+    "aliases": ["scUlt", "scCz"]
+  },
+  "PewW-128": {
+    "size": "LARGE"
+  }
+}

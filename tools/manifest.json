@@ -1,0 +1,75 @@
+{
+  "count": 10,
+  "emotes": [
+    {
+      "name": "scCloudzUlt",
+      "file": "scCloudzUlt.tga",
+      "source": "scCloudzUlt.png",
+      "animated": false,
+      "aliases": []
+    },
+    {
+      "name": "scFuck",
+      "file": "scFuck.tga",
+      "source": "scFuck.png",
+      "animated": false,
+      "aliases": []
+    },
+    {
+      "name": "scImIn",
+      "file": "scImIn.tga",
+      "source": "scImIn.gif",
+      "animated": true,
+      "aliases": []
+    },
+    {
+      "name": "scOooo",
+      "file": "scOooo.tga",
+      "source": "scOooo.gif",
+      "animated": true,
+      "aliases": []
+    },
+    {
+      "name": "scPewW",
+      "file": "scPewW.tga",
+      "source": "scPewW.png",
+      "animated": false,
+      "aliases": []
+    },
+    {
+      "name": "scTheChosen",
+      "file": "scTheChosen.tga",
+      "source": "scTheChosen.jpg",
+      "animated": false,
+      "aliases": []
+    },
+    {
+      "name": "scTrue",
+      "file": "scTrue.tga",
+      "source": "scTrue.png",
+      "animated": false,
+      "aliases": []
+    },
+    {
+      "name": "scTurtleKillOrder",
+      "file": "scTurtleKillOrder.tga",
+      "source": "scTurtleKillOrder.png",
+      "animated": false,
+      "aliases": []
+    },
+    {
+      "name": "scVynChatting",
+      "file": "scVynChatting.tga",
+      "source": "scVynChatting.png",
+      "animated": false,
+      "aliases": []
+    },
+    {
+      "name": "scWeAreGathered",
+      "file": "scWeAreGathered.tga",
+      "source": "scWeAreGathered.gif",
+      "animated": true,
+      "aliases": []
+    }
+  ]
+}
