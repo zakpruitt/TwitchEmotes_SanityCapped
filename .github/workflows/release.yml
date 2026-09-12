@@ -62,7 +62,7 @@ jobs:
           ZIP="TwitchEmotes_SanityCapped-${VERSION}.zip"
           rm -rf dist && mkdir -p dist/TwitchEmotes_SanityCapped
           rsync -a --exclude '.git' --exclude '.github' --exclude 'web' \
-                   --exclude 'dist' --exclude 'tools/source' \
+                   --exclude 'dist' --exclude '.gitignore' --exclude '.gitattributes' --exclude 'tools/source' \
                    ./ dist/TwitchEmotes_SanityCapped/
           (cd dist && zip -qr "../${ZIP}" TwitchEmotes_SanityCapped)
           # release.json is what WoWUp reads to pick the right asset for retail.
