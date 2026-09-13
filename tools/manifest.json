@@ -1,5 +1,5 @@
 {
-  "count": 11,
+  "count": 12,
   "emotes": [
     {
       "name": "scCloudzUlt",
@@ -33,6 +33,13 @@
       "name": "scPewW",
       "file": "scPewW.tga",
       "source": "scPewW.png",
+      "animated": false,
+      "aliases": []
+    },
+    {
+      "name": "scSpuggiesUlt",
+      "file": "scSpuggiesUlt.tga",
+      "source": "scSpuggiesUlt.png",
       "animated": false,
       "aliases": []
     },
