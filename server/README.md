@@ -6,9 +6,10 @@ rebuild the addon and publish a release WoWUp picks up. Nobody pushes anything b
 hand.
 
 ```
-src/main/java/gg/sanitycapped/emotes/
-  config/  AppProperties (validated) and the Clock bean
-  emote/   Emote, its repository, the image store, and EmoteService — the rules
+src/main/java/com/zakpruitt/sanitycapped/
+  config/  AppProperties (validated), the Clock bean, the Instant converter
+  emote/   the Emote entity, its Spring Data repositories, the image store,
+           and EmoteService — the rules
   image/   decoding, type sniffing, SHA-256 and the perceptual hash
   naming/  trigger words, ported from tools/build_emotes.py
   github/  the only outbound calls: commit, delete, list, latest release
@@ -31,8 +32,10 @@ the result to a response DTO. Domain failures are thrown as `EmoteException`
 subtypes and mapped to statuses in one place (`web/ApiErrorHandler`), so services
 never mention HTTP and `Emote` never reaches a template or a JSON body.
 
-Java 21, SQLite, images on a local volume. No database server and nothing to
-provision.
+Java 21, Spring Data JPA over SQLite (Hibernate's community dialect), images on
+a local volume. No database server and nothing to provision. `schema.sql` owns
+the schema; `ddl-auto` is `none`, because the partial unique indexes that make
+rejection free a name are not something Hibernate would generate.
 
 ## Running it locally
 

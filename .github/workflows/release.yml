@@ -4,7 +4,7 @@ name: Build and release
 # lands here. Rapid approvals collapse into one release via the concurrency group.
 on:
   push:
-    branches: [main]
+    branches: [ main ]
     paths:
       - 'tools/source/**'
       - 'tools/emotes.json'

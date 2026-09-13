@@ -1,49 +1,49 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout/base :: page(~{::title}, 'browse', ~{::main}, ~{::scripts})}">
+<html lang="en" th:replace="~{layout/base :: page(~{::title}, 'browse', ~{::main}, ~{::scripts})}"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Sanity Capped Emotes</title>
+    <title>Sanity Capped Emotes</title>
 </head>
 <body>
 
 <main>
-  <h1>The guild emote pack</h1>
-  <p class="sub">Everything below is live in the addon. Click an emote to copy what you type in chat.</p>
+    <h1>The guild emote pack</h1>
+    <p class="sub">Everything below is live in the addon. Click an emote to copy what you type in chat.</p>
 
-  <div class="card install">
-    <div>
-      <strong>Install or update</strong><br>
-      <span class="muted">WoWUp &rarr; Get Addons &rarr; Install from URL</span>
+    <div class="card install">
+        <div>
+            <strong>Install or update</strong><br>
+            <span class="muted">WoWUp &rarr; Get Addons &rarr; Install from URL</span>
+        </div>
+        <code id="repo-url" th:text="${repoUrl}">https://github.com/…</code>
+        <button class="ghost" data-copy="#repo-url">Copy URL</button>
+        <a class="tag" rel="noopener" target="_blank" th:href="${release.url()}" th:if="${release}"
+           th:text="'latest ' + ${release.tag()}">latest v1.0</a>
     </div>
-    <code id="repo-url" th:text="${repoUrl}">https://github.com/…</code>
-    <button class="ghost" data-copy="#repo-url">Copy URL</button>
-    <a class="tag" th:if="${release}" th:href="${release.url()}" target="_blank" rel="noopener"
-       th:text="'latest ' + ${release.tag()}">latest v1.0</a>
-  </div>
 
-  <div class="toolbar">
-    <input type="search" id="search" placeholder="Search emotes…" autocomplete="off"
-           aria-label="Search emotes">
-    <span class="tag" id="count" th:text="${#lists.size(emotes)} + ' emotes'">0 emotes</span>
-  </div>
+    <div class="toolbar">
+        <input aria-label="Search emotes" autocomplete="off" id="search" placeholder="Search emotes…"
+               type="search">
+        <span class="tag" id="count" th:text="${#lists.size(emotes)} + ' emotes'">0 emotes</span>
+    </div>
 
-  <div class="grid" id="grid">
-    <button class="emote" type="button" th:each="emote : ${emotes}"
-            th:data-name="${emote.name()}" th:data-search="${emote.name() + ' ' + emote.uploader()}"
-            th:title="'Click to copy ' + ${emote.name()}">
-      <img th:src="${emote.url()}" th:alt="${emote.name()}" loading="lazy">
-      <span class="name" th:text="${emote.name()}">scEmote</span>
-      <span class="by" th:text="'by ' + ${emote.uploader()} + ' · ' + ${emote.age()}">by someone</span>
-    </button>
-  </div>
+    <div class="grid" id="grid">
+        <button class="emote" th:data-name="${emote.name()}" th:data-search="${emote.name() + ' ' + emote.uploader()}"
+                th:each="emote : ${emotes}" th:title="'Click to copy ' + ${emote.name()}"
+                type="button">
+            <img loading="lazy" th:alt="${emote.name()}" th:src="${emote.url()}">
+            <span class="name" th:text="${emote.name()}">scEmote</span>
+            <span class="by" th:text="'by ' + ${emote.uploader()} + ' · ' + ${emote.age()}">by someone</span>
+        </button>
+    </div>
 
-  <p class="empty" th:if="${#lists.isEmpty(emotes)}">
-    No emotes yet. Be the first to <a th:href="@{/upload}">upload one</a>.
-  </p>
+    <p class="empty" th:if="${#lists.isEmpty(emotes)}">
+        No emotes yet. Be the first to <a th:href="@{/upload}">upload one</a>.
+    </p>
 </main>
 
 <th:block th:fragment="scripts">
-  <script type="module" th:src="@{/js/browse.js}"></script>
+    <script th:src="@{/js/browse.js}" type="module"></script>
 </th:block>
 
 </body>

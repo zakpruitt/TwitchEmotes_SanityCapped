@@ -1,47 +1,47 @@
-export async function api(path, { passcode, ...init } = {}) {
-  const response = await fetch(path, {
-    ...init,
-    headers: { ...(init.headers ?? {}), ...(passcode ? { "X-Passcode": passcode } : {}) },
-  });
-  const body = response.status === 204 ? {} : await response.json().catch(() => ({}));
-  if (!response.ok) {
-    throw new Error(body.error ?? `Request failed (${response.status})`);
-  }
-  return body;
+export async function api(path, {passcode, ...init} = {}) {
+    const response = await fetch(path, {
+        ...init,
+        headers: {...(init.headers ?? {}), ...(passcode ? {"X-Passcode": passcode} : {})},
+    });
+    const body = response.status === 204 ? {} : await response.json().catch(() => ({}));
+    if (!response.ok) {
+        throw new Error(body.error ?? `Request failed (${response.status})`);
+    }
+    return body;
 }
 
 export async function postJson(path, body, passcode) {
-  return api(path, {
-    method: "POST",
-    passcode,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
+    return api(path, {
+        method: "POST",
+        passcode,
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(body),
+    });
 }
 
 export const remembered = {
-  get(key) {
-    return localStorage.getItem(key) ?? "";
-  },
-  set(key, value) {
-    localStorage.setItem(key, value);
-  },
+    get(key) {
+        return localStorage.getItem(key) ?? "";
+    },
+    set(key, value) {
+        localStorage.setItem(key, value);
+    },
 };
 
 /** Only a pre-check; the server hashes the upload itself. */
 export async function sha256(file) {
-  const digest = await crypto.subtle.digest("SHA-256", await file.arrayBuffer());
-  return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
+    const digest = await crypto.subtle.digest("SHA-256", await file.arrayBuffer());
+    return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
 export function show(element, text, kind = "ok") {
-  element.className = `msg ${kind}`;
-  element.textContent = text;
+    element.className = `msg ${kind}`;
+    element.textContent = text;
 }
 
 export function clear(element) {
-  element.className = "msg";
-  element.textContent = "";
+    element.className = "msg";
+    element.textContent = "";
 }
 
 export const $ = (selector, root = document) => root.querySelector(selector);

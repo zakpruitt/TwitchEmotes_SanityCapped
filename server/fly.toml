@@ -2,32 +2,32 @@ app = "sanity-capped-emotes"
 primary_region = "ord"
 
 [build]
-  dockerfile = "Dockerfile"
+dockerfile = "Dockerfile"
 
 [env]
-  DATA_DIR = "/data"
-  PORT = "8080"
-  GITHUB_REPO = "zakpruitt/TwitchEmotes_SanityCapped"
+DATA_DIR = "/data"
+PORT = "8080"
+GITHUB_REPO = "zakpruitt/TwitchEmotes_SanityCapped"
 
 # Uploaded images and the SQLite database. Without this, a deploy wipes the queue.
 [mounts]
-  source = "emotes_data"
-  destination = "/data"
+source = "emotes_data"
+destination = "/data"
 
 [http_service]
-  internal_port = 8080
-  force_https = true
-  auto_stop_machines = "stop"
-  auto_start_machines = true
-  # Sleeping when idle keeps this inside the free allowance; the first request
-  # after a nap waits a few seconds for the JVM.
-  min_machines_running = 0
+internal_port = 8080
+force_https = true
+auto_stop_machines = "stop"
+auto_start_machines = true
+# Sleeping when idle keeps this inside the free allowance; the first request
+# after a nap waits a few seconds for the JVM.
+min_machines_running = 0
 
-  [http_service.concurrency]
-    type = "requests"
-    hard_limit = 50
-    soft_limit = 25
+[http_service.concurrency]
+type = "requests"
+hard_limit = 50
+soft_limit = 25
 
 [[vm]]
-  size = "shared-cpu-1x"
-  memory = "512mb"
+size = "shared-cpu-1x"
+memory = "512mb"

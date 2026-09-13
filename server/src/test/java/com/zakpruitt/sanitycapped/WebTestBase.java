@@ -1,0 +1,37 @@
+package com.zakpruitt.sanitycapped;
+
+import com.zakpruitt.sanitycapped.github.GitHubClient;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+/**
+ * A real context on a throwaway data directory, with GitHub mocked out.
+ */
+@SpringBootTest
+@AutoConfigureMockMvc
+abstract class WebTestBase {
+
+    static final String PASSCODE_HEADER = "X-Passcode";
+    static final String GUILD = "guild-test";
+    static final String ADMIN = "admin-test";
+
+    @MockitoBean
+    GitHubClient github;
+
+    @DynamicPropertySource
+    static void testConfiguration(DynamicPropertyRegistry registry) throws IOException {
+        Path dataDir = Files.createTempDirectory("emotes-test");
+        registry.add("app.data-dir", dataDir::toString);
+        registry.add("spring.datasource.url", () -> "jdbc:sqlite:" + dataDir.resolve("test.db"));
+        registry.add("app.guild-passcode", () -> GUILD);
+        registry.add("app.admin-passcode", () -> ADMIN);
+        registry.add("app.github-token", () -> "test-token");
+    }
+}

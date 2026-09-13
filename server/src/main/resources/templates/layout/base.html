@@ -1,28 +1,28 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:fragment="page(title, active, content, scripts)">
+<html lang="en" th:fragment="page(title, active, content, scripts)"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title th:replace="${title}">Sanity Capped Emotes</title>
-  <link rel="stylesheet" th:href="@{/css/site.css}">
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title th:replace="${title}">Sanity Capped Emotes</title>
+    <link rel="stylesheet" th:href="@{/css/site.css}">
 </head>
 <body>
 
 <header class="site">
-  <a class="brand" th:href="@{/}">Sanity Capped <b>Emotes</b></a>
-  <nav>
-    <a th:href="@{/}" th:classappend="${active == 'browse'} ? 'active'">Browse</a>
-    <a th:href="@{/upload}" th:classappend="${active == 'upload'} ? 'active'">Upload</a>
-    <a th:href="@{/admin}" th:classappend="${active == 'admin'} ? 'active'">Admin</a>
-  </nav>
+    <a class="brand" th:href="@{/}">Sanity Capped <b>Emotes</b></a>
+    <nav>
+        <a th:classappend="${active == 'browse'} ? 'active'" th:href="@{/}">Browse</a>
+        <a th:classappend="${active == 'upload'} ? 'active'" th:href="@{/upload}">Upload</a>
+        <a th:classappend="${active == 'admin'} ? 'active'" th:href="@{/admin}">Admin</a>
+    </nav>
 </header>
 
 <main th:replace="${content}"></main>
 
 <footer class="site">
-  <span>Type an emote's name in chat. Everyone with the addon sees it.</span>
-  <a th:href="${repoUrl}" target="_blank" rel="noopener">GitHub</a>
+    <span>Type an emote's name in chat. Everyone with the addon sees it.</span>
+    <a rel="noopener" target="_blank" th:href="${repoUrl}">GitHub</a>
 </footer>
 
 <th:block th:replace="${scripts} ?: ~{}"></th:block>

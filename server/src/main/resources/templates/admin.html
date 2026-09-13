@@ -1,45 +1,47 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout/base :: page(~{::title}, 'admin', ~{::main}, ~{::scripts})}">
+<html lang="en" th:replace="~{layout/base :: page(~{::title}, 'admin', ~{::main}, ~{::scripts})}"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Emote queue</title>
+    <title>Emote queue</title>
 </head>
 <body>
 
 <main>
-  <h1>Approval queue</h1>
-  <p class="sub">Approving commits the image to the repo, which builds and publishes a release on its own.</p>
+    <h1>Approval queue</h1>
+    <p class="sub">Approving commits the image to the repo, which builds and publishes a release on its own.</p>
 
-  <p class="msg warn" th:unless="${publishingEnabled}">
-    No GitHub token is configured, so approving has nowhere to commit. Set GITHUB_TOKEN and restart.
-  </p>
+    <p class="msg warn" th:unless="${publishingEnabled}">
+        No GitHub token is configured, so approving has nowhere to commit. Set GITHUB_TOKEN and restart.
+    </p>
 
-  <form class="card" id="gate" autocomplete="off">
-    <label class="field">
-      <span>Admin passcode</span>
-      <input type="password" id="passcode" autocomplete="current-password">
-    </label>
-    <div class="actions"><button type="submit">Unlock</button></div>
-    <p class="msg" id="gate-message" role="status"></p>
-  </form>
+    <form autocomplete="off" class="card" id="gate">
+        <label class="field">
+            <span>Admin passcode</span>
+            <input autocomplete="current-password" id="passcode" type="password">
+        </label>
+        <div class="actions">
+            <button type="submit">Unlock</button>
+        </div>
+        <p class="msg" id="gate-message" role="status"></p>
+    </form>
 
-  <section id="panel" hidden>
-    <div class="toolbar">
-      <span class="tag" id="pending-count"></span>
-      <button class="ghost" id="refresh">Refresh</button>
-      <button class="ghost" id="resync" title="Adopt anything added to the repo by hand">Sync from repo</button>
-    </div>
+    <section hidden id="panel">
+        <div class="toolbar">
+            <span class="tag" id="pending-count"></span>
+            <button class="ghost" id="refresh">Refresh</button>
+            <button class="ghost" id="resync" title="Adopt anything added to the repo by hand">Sync from repo</button>
+        </div>
 
-    <div id="queue"></div>
+        <div id="queue"></div>
 
-    <h2>In the pack</h2>
-    <p class="sub">Removing one commits a delete and rebuilds the addon without it.</p>
-    <div class="grid" id="approved"></div>
-  </section>
+        <h2>In the pack</h2>
+        <p class="sub">Removing one commits a delete and rebuilds the addon without it.</p>
+        <div class="grid" id="approved"></div>
+    </section>
 </main>
 
 <th:block th:fragment="scripts">
-  <script type="module" th:src="@{/js/admin.js}"></script>
+    <script th:src="@{/js/admin.js}" type="module"></script>
 </th:block>
 
 </body>

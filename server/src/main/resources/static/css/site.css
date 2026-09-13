@@ -1,225 +1,225 @@
 /* Sanity Capped Emotes — one dark theme, one accent, no framework. */
 
 :root {
-  --bg: #0e0d13;
-  --panel: #17161f;
-  --panel-2: #1e1d28;
-  --line: #2b2936;
-  --text: #eae8f2;
-  --muted: #9f9bb3;
-  --accent: #a97bff;
-  --accent-dim: #6f4fd0;
-  --good: #5ed39a;
-  --bad: #ff7a7a;
-  --warn: #ffcc6b;
-  --radius: 12px;
+    --bg: #0e0d13;
+    --panel: #17161f;
+    --panel-2: #1e1d28;
+    --line: #2b2936;
+    --text: #eae8f2;
+    --muted: #9f9bb3;
+    --accent: #a97bff;
+    --accent-dim: #6f4fd0;
+    --good: #5ed39a;
+    --bad: #ff7a7a;
+    --warn: #ffcc6b;
+    --radius: 12px;
 }
 
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  min-height: 100vh;
-  background: radial-gradient(900px 500px at 50% -10%, #241f3d 0%, transparent 70%), var(--bg);
-  color: var(--text);
-  font: 15px/1.55 "Segoe UI", Inter, system-ui, sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(900px 500px at 50% -10%, #241f3d 0%, transparent 70%), var(--bg);
+    color: var(--text);
+    font: 15px/1.55 "Segoe UI", Inter, system-ui, sans-serif;
 }
 
 a {
-  color: var(--accent);
+    color: var(--accent);
 }
 
 h1 {
-  font-size: 26px;
-  margin: 0 0 6px;
+    font-size: 26px;
+    margin: 0 0 6px;
 }
 
 h2 {
-  font-size: 20px;
-  margin: 38px 0 6px;
+    font-size: 20px;
+    margin: 38px 0 6px;
 }
 
 .sub,
 .hint {
-  color: var(--muted);
-  margin: 0 0 26px;
+    color: var(--muted);
+    margin: 0 0 26px;
 }
 
 .hint {
-  margin: 8px 0 0;
-  font-size: 13px;
+    margin: 8px 0 0;
+    font-size: 13px;
 }
 
 .hint strong {
-  color: var(--text);
+    color: var(--text);
 }
 
 .muted {
-  color: var(--muted);
-  font-size: 13px;
+    color: var(--muted);
+    font-size: 13px;
 }
 
 /* Chrome ------------------------------------------------------------------ */
 
 header.site {
-  position: sticky;
-  top: 0;
-  z-index: 5;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  padding: 18px 24px;
-  border-bottom: 1px solid var(--line);
-  background: rgba(14, 13, 19, 0.8);
-  backdrop-filter: blur(8px);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(14, 13, 19, 0.8);
+    backdrop-filter: blur(8px);
 }
 
 .brand {
-  margin-right: auto;
-  font-weight: 700;
-  color: var(--text);
-  text-decoration: none;
+    margin-right: auto;
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
 }
 
 .brand b {
-  color: var(--accent);
+    color: var(--accent);
 }
 
 nav a {
-  padding: 6px 12px;
-  border-radius: 8px;
-  color: var(--muted);
-  font-weight: 600;
-  text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    color: var(--muted);
+    font-weight: 600;
+    text-decoration: none;
 }
 
 nav a:hover,
 nav a.active {
-  color: var(--text);
-  background: var(--panel-2);
+    color: var(--text);
+    background: var(--panel-2);
 }
 
 main {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 28px 20px 60px;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 28px 20px 60px;
 }
 
 main.narrow {
-  max-width: 620px;
+    max-width: 620px;
 }
 
 footer.site {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  padding: 24px;
-  border-top: 1px solid var(--line);
-  color: var(--muted);
-  font-size: 13px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    padding: 24px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 13px;
 }
 
 /* Blocks ------------------------------------------------------------------ */
 
 .card {
-  padding: 18px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--panel);
+    padding: 18px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--panel);
 }
 
 .install {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 26px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 26px;
 }
 
 .install code {
-  padding: 7px 10px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--panel-2);
-  font-size: 13px;
-  word-break: break-all;
+    padding: 7px 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel-2);
+    font-size: 13px;
+    word-break: break-all;
 }
 
 .toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
 }
 
 .tag {
-  display: inline-block;
-  padding: 2px 7px;
-  border: 1px solid var(--line);
-  border-radius: 99px;
-  color: var(--muted);
-  font-size: 11px;
-  text-decoration: none;
+    display: inline-block;
+    padding: 2px 7px;
+    border: 1px solid var(--line);
+    border-radius: 99px;
+    color: var(--muted);
+    font-size: 11px;
+    text-decoration: none;
 }
 
 .tag.warn {
-  color: var(--warn);
-  border-color: #4a3f24;
+    color: var(--warn);
+    border-color: #4a3f24;
 }
 
 .empty {
-  padding: 40px;
-  color: var(--muted);
-  text-align: center;
+    padding: 40px;
+    color: var(--muted);
+    text-align: center;
 }
 
 /* Emote grid -------------------------------------------------------------- */
 
 .grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 14px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
 }
 
 .emote {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding: 14px 12px 12px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--panel);
-  color: inherit;
-  font: inherit;
-  text-align: center;
-  cursor: pointer;
-  transition: transform 0.12s ease, border-color 0.12s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 14px 12px 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--panel);
+    color: inherit;
+    font: inherit;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.12s ease, border-color 0.12s ease;
 }
 
 .emote:hover {
-  transform: translateY(-2px);
-  border-color: var(--accent-dim);
+    transform: translateY(-2px);
+    border-color: var(--accent-dim);
 }
 
 .emote img {
-  width: 64px;
-  height: 64px;
-  object-fit: contain;
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
 }
 
 .name {
-  font-weight: 600;
-  font-size: 13px;
-  word-break: break-all;
+    font-weight: 600;
+    font-size: 13px;
+    word-break: break-all;
 }
 
 .by {
-  color: var(--muted);
-  font-size: 11px;
+    color: var(--muted);
+    font-size: 11px;
 }
 
 /* Forms ------------------------------------------------------------------- */
@@ -227,197 +227,197 @@ footer.site {
 input[type="text"],
 input[type="password"],
 input[type="search"] {
-  padding: 10px 12px;
-  border: 1px solid var(--line);
-  border-radius: 9px;
-  background: var(--panel-2);
-  color: var(--text);
-  font: inherit;
-  outline: none;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: var(--panel-2);
+    color: var(--text);
+    font: inherit;
+    outline: none;
 }
 
 input:focus {
-  border-color: var(--accent-dim);
+    border-color: var(--accent-dim);
 }
 
 input[type="search"] {
-  flex: 1;
-  min-width: 200px;
+    flex: 1;
+    min-width: 200px;
 }
 
 .field {
-  display: block;
-  margin-top: 16px;
+    display: block;
+    margin-top: 16px;
 }
 
 .field span {
-  display: block;
-  margin-bottom: 6px;
-  color: var(--muted);
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+    display: block;
+    margin-bottom: 6px;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
 }
 
 .field input {
-  width: 100%;
+    width: 100%;
 }
 
 .actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
 }
 
 button {
-  padding: 10px 16px;
-  border: 0;
-  border-radius: 9px;
-  background: var(--accent);
-  color: #17121f;
-  font: 600 14px/1 inherit;
-  cursor: pointer;
+    padding: 10px 16px;
+    border: 0;
+    border-radius: 9px;
+    background: var(--accent);
+    color: #17121f;
+    font: 600 14px/1 inherit;
+    cursor: pointer;
 }
 
 button:hover {
-  filter: brightness(1.08);
+    filter: brightness(1.08);
 }
 
 button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 button.ghost {
-  border: 1px solid var(--line);
-  background: var(--panel-2);
-  color: var(--text);
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    color: var(--text);
 }
 
 button.ok {
-  background: var(--good);
-  color: #10261c;
+    background: var(--good);
+    color: #10261c;
 }
 
 button.danger {
-  border: 1px solid #4a2a2f;
-  background: transparent;
-  color: var(--bad);
+    border: 1px solid #4a2a2f;
+    background: transparent;
+    color: var(--bad);
 }
 
 button.small {
-  margin-top: 8px;
-  padding: 5px 10px;
+    margin-top: 8px;
+    padding: 5px 10px;
 }
 
 .drop {
-  display: block;
-  padding: 34px;
-  border: 2px dashed var(--line);
-  border-radius: var(--radius);
-  color: var(--muted);
-  text-align: center;
-  cursor: pointer;
+    display: block;
+    padding: 34px;
+    border: 2px dashed var(--line);
+    border-radius: var(--radius);
+    color: var(--muted);
+    text-align: center;
+    cursor: pointer;
 }
 
 .drop.over {
-  border-color: var(--accent);
-  background: var(--panel-2);
-  color: var(--text);
+    border-color: var(--accent);
+    background: var(--panel-2);
+    color: var(--text);
 }
 
 .drop img {
-  max-width: 128px;
-  max-height: 128px;
+    max-width: 128px;
+    max-height: 128px;
 }
 
 .msg {
-  margin-top: 14px;
-  padding: 11px 13px;
-  border-radius: 9px;
-  font-size: 14px;
+    margin-top: 14px;
+    padding: 11px 13px;
+    border-radius: 9px;
+    font-size: 14px;
 }
 
 .msg:empty {
-  display: none;
+    display: none;
 }
 
 .msg.err {
-  background: #2a1a1e;
-  color: var(--bad);
+    background: #2a1a1e;
+    color: var(--bad);
 }
 
 .msg.ok {
-  background: #16291f;
-  color: var(--good);
+    background: #16291f;
+    color: var(--good);
 }
 
 .msg.warn {
-  background: #2a2418;
-  color: var(--warn);
+    background: #2a2418;
+    color: var(--warn);
 }
 
 /* Chat preview ------------------------------------------------------------ */
 
 .chatline {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  max-width: 340px;
-  margin: 10px 0 0;
-  padding: 9px 12px;
-  border: 1px solid var(--line);
-  border-radius: 9px;
-  background: #101016;
-  color: #f5e6b0;
-  font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 340px;
+    margin: 10px 0 0;
+    padding: 9px 12px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: #101016;
+    color: #f5e6b0;
+    font-size: 14px;
 }
 
 .chatline img {
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
 }
 
 /* Approval queue ---------------------------------------------------------- */
 
 .pending {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  margin-bottom: 12px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 12px;
 }
 
 .pending img {
-  width: 72px;
-  height: 72px;
-  padding: 4px;
-  border-radius: 9px;
-  background: var(--panel-2);
-  object-fit: contain;
+    width: 72px;
+    height: 72px;
+    padding: 4px;
+    border-radius: 9px;
+    background: var(--panel-2);
+    object-fit: contain;
 }
 
 .pending .meta {
-  flex: 1;
-  min-width: 0;
+    flex: 1;
+    min-width: 0;
 }
 
 .pending .actions {
-  margin: 0;
+    margin: 0;
 }
 
 .pending [data-rename] {
-  width: 150px;
+    width: 150px;
 }
 
 @media (max-width: 620px) {
-  header.site {
-    padding: 14px;
-  }
+    header.site {
+        padding: 14px;
+    }
 
-  .pending {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+    .pending {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }

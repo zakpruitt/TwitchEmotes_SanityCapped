@@ -9,7 +9,7 @@ RUN mvn -B -q package -DskipTests
 # Run
 FROM eclipse-temurin:21-jre
 WORKDIR /app
-COPY --from=build /build/target/emotes-*.jar app.jar
+COPY --from=build /build/target/server-*.jar app.jar
 
 # Images and the SQLite file live here; mount a volume so they survive deploys.
 ENV DATA_DIR=/data

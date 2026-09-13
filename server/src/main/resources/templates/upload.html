@@ -1,54 +1,54 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout/base :: page(~{::title}, 'upload', ~{::main}, ~{::scripts})}">
+<html lang="en" th:replace="~{layout/base :: page(~{::title}, 'upload', ~{::main}, ~{::scripts})}"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Upload an emote</title>
+    <title>Upload an emote</title>
 </head>
 <body>
 
 <main class="narrow">
-  <h1>Upload an emote</h1>
-  <p class="sub">
-    GIF, PNG, WebP or JPEG, up to <span th:text="${maxMegabytes}">2</span> MB.
-    It goes into a queue and ships to everyone once it's approved.
-  </p>
+    <h1>Upload an emote</h1>
+    <p class="sub">
+        GIF, PNG, WebP or JPEG, up to <span th:text="${maxMegabytes}">2</span> MB.
+        It goes into a queue and ships to everyone once it's approved.
+    </p>
 
-  <form class="card" id="upload-form" autocomplete="off">
-    <label class="drop" id="drop" for="file">
-      <span id="drop-text">Drop an image here, or click to pick one</span>
-      <img id="preview" alt="" hidden>
-    </label>
-    <input type="file" id="file" name="file" hidden
-           accept="image/gif,image/png,image/webp,image/jpeg">
+    <form autocomplete="off" class="card" id="upload-form">
+        <label class="drop" for="file" id="drop">
+            <span id="drop-text">Drop an image here, or click to pick one</span>
+            <img alt="" hidden id="preview">
+        </label>
+        <input accept="image/gif,image/png,image/webp,image/jpeg" hidden id="file" name="file"
+               type="file">
 
-    <label class="field">
-      <span>Emote name</span>
-      <input type="text" id="name" name="name" placeholder="peepoHmm">
-    </label>
-    <p class="hint" id="trigger"></p>
-    <p class="chatline" id="chat-preview" hidden></p>
+        <label class="field">
+            <span>Emote name</span>
+            <input id="name" name="name" placeholder="peepoHmm" type="text">
+        </label>
+        <p class="hint" id="trigger"></p>
+        <p class="chatline" hidden id="chat-preview"></p>
 
-    <label class="field">
-      <span>Your name</span>
-      <input type="text" id="uploader" name="uploader" placeholder="Whoever you are in guild chat">
-    </label>
+        <label class="field">
+            <span>Your name</span>
+            <input id="uploader" name="uploader" placeholder="Whoever you are in guild chat" type="text">
+        </label>
 
-    <label class="field">
-      <span>Guild passcode</span>
-      <input type="password" id="passcode" autocomplete="current-password">
-    </label>
+        <label class="field">
+            <span>Guild passcode</span>
+            <input autocomplete="current-password" id="passcode" type="password">
+        </label>
 
-    <div class="actions">
-      <button type="submit" id="submit" disabled>Submit for approval</button>
-      <button type="button" class="ghost" id="reset">Clear</button>
-    </div>
+        <div class="actions">
+            <button disabled id="submit" type="submit">Submit for approval</button>
+            <button class="ghost" id="reset" type="button">Clear</button>
+        </div>
 
-    <p class="msg" id="message" role="status"></p>
-  </form>
+        <p class="msg" id="message" role="status"></p>
+    </form>
 </main>
 
 <th:block th:fragment="scripts">
-  <script type="module" th:src="@{/js/upload.js}"></script>
+    <script th:src="@{/js/upload.js}" type="module"></script>
 </th:block>
 
 </body>
