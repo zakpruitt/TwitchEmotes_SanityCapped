@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
-/** One passcode handed out in guild chat, one kept by whoever approves. */
+/** Uploads are open; the passcode is kept by whoever approves. */
 @Component
 @RequiredArgsConstructor
 public class Passcodes {
@@ -18,20 +18,8 @@ public class Passcodes {
 
     private final AppProperties props;
 
-    /** The admin passcode works everywhere the guild one does. */
-    public boolean isGuild(HttpServletRequest request) {
-        String given = given(request);
-        return matches(given, props.guildPasscode()) || matches(given, props.adminPasscode());
-    }
-
     public boolean isAdmin(HttpServletRequest request) {
         return matches(given(request), props.adminPasscode());
-    }
-
-    public void requireGuild(HttpServletRequest request) {
-        if (!isGuild(request)) {
-            throw new NotAllowedException("Wrong passcode.");
-        }
     }
 
     public void requireAdmin(HttpServletRequest request) {

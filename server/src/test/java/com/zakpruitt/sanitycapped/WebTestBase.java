@@ -19,7 +19,6 @@ import java.nio.file.Path;
 abstract class WebTestBase {
 
     static final String PASSCODE_HEADER = "X-Passcode";
-    static final String GUILD = "guild-test";
     static final String ADMIN = "admin-test";
 
     @MockitoBean
@@ -30,7 +29,6 @@ abstract class WebTestBase {
         Path dataDir = Files.createTempDirectory("emotes-test");
         registry.add("app.data-dir", dataDir::toString);
         registry.add("spring.datasource.url", () -> "jdbc:sqlite:" + dataDir.resolve("test.db"));
-        registry.add("app.guild-passcode", () -> GUILD);
         registry.add("app.admin-passcode", () -> ADMIN);
         registry.add("app.github-token", () -> "test-token");
     }

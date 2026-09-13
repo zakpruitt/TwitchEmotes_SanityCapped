@@ -20,7 +20,6 @@ server.port: ${PORT:8080}
 
 app:
   data-dir: ${DATA_DIR:./data}
-  guild-passcode: ${GUILD_PASSCODE:letmein}
   admin-passcode: ${ADMIN_PASSCODE:change-me}
   github-repo: ${GITHUB_REPO:zakpruitt/TwitchEmotes_SanityCapped}
   github-token: ${GITHUB_TOKEN:}

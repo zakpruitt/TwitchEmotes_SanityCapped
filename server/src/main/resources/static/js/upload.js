@@ -11,7 +11,6 @@ const els = {
     trigger: $("#trigger"),
     chat: $("#chat-preview"),
     uploader: $("#uploader"),
-    passcode: $("#passcode"),
     submit: $("#submit"),
     reset: $("#reset"),
     message: $("#message"),
@@ -20,7 +19,6 @@ const els = {
 let chosen = null;
 let fileHash = null;
 
-els.passcode.value = remembered.get("passcode");
 els.uploader.value = remembered.get("uploader");
 
 function typedName() {
@@ -36,7 +34,7 @@ async function refresh() {
         els.chat.innerHTML =
             `<span>[Guild] You:</span> <img src="${els.preview.src}" alt=""> <span>${name}</span>`;
     }
-    els.submit.disabled = !(chosen && name && els.uploader.value.trim() && els.passcode.value);
+    els.submit.disabled = !(chosen && name && els.uploader.value.trim());
 
     if (!name && !fileHash) return;
     try {
@@ -79,7 +77,7 @@ els.drop.addEventListener("drop", (event) => {
     choose(event.dataTransfer.files[0]);
 });
 
-for (const field of [els.name, els.uploader, els.passcode]) {
+for (const field of [els.name, els.uploader]) {
     field.addEventListener("input", refresh);
 }
 
@@ -96,7 +94,6 @@ els.reset.addEventListener("click", () => {
 form.addEventListener("submit", async (event) => {
     event.preventDefault();
     els.submit.disabled = true;
-    remembered.set("passcode", els.passcode.value);
     remembered.set("uploader", els.uploader.value.trim());
 
     const body = new FormData();
@@ -105,7 +102,7 @@ form.addEventListener("submit", async (event) => {
     body.append("uploader", els.uploader.value.trim());
 
     try {
-        const queued = await api("/api/emotes", {method: "POST", body, passcode: els.passcode.value});
+        const queued = await api("/api/emotes", {method: "POST", body});
         els.reset.click();
         show(els.message, `${queued.name} is in the queue. It'll show up in the addon once it's approved.`);
     } catch (error) {

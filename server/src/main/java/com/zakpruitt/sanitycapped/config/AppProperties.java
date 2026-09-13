@@ -12,7 +12,6 @@ import java.nio.file.Path;
 @ConfigurationProperties("app")
 public record AppProperties(
         @NotNull Path dataDir,
-        @NotBlank String guildPasscode,
         @NotBlank String adminPasscode,
         @NotBlank String githubRepo,
         String githubToken,

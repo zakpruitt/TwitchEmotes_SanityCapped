@@ -10,7 +10,7 @@ Java 21, Spring Boot 4, Spring Data JPA on SQLite, Thymeleaf. Images are stored 
 
 ```bash
 cd server
-DATA_DIR=./data GUILD_PASSCODE=letmein ADMIN_PASSCODE=admin-test mvn spring-boot:run
+DATA_DIR=./data ADMIN_PASSCODE=admin-test mvn spring-boot:run
 ```
 
 Open http://localhost:8080. On startup it imports every emote already in `tools/source/`. Without `GITHUB_TOKEN`, uploads and rejections work but approvals are disabled.
@@ -26,7 +26,6 @@ mvn test
 | Variable         | Description                                            |
 | ---------------- | ------------------------------------------------------ |
 | `DATA_DIR`       | Where images and `emotes.db` live (persistent volume)  |
-| `GUILD_PASSCODE` | Shared in guild chat, allows uploads                   |
 | `ADMIN_PASSCODE` | Allows approve, reject, remove and resync              |
 | `GITHUB_TOKEN`   | Fine-grained PAT for this repo, Contents read/write    |
 | `GITHUB_REPO`    | `owner/name`, defaults to this repo                    |
@@ -40,7 +39,7 @@ Health check: `/actuator/health`
 cd server
 fly launch --no-deploy
 fly volumes create emotes_data --size 1
-fly secrets set GUILD_PASSCODE=... ADMIN_PASSCODE=... GITHUB_TOKEN=...
+fly secrets set ADMIN_PASSCODE=... GITHUB_TOKEN=...
 fly deploy
 ```
 

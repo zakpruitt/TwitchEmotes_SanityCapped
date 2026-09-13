@@ -50,13 +50,12 @@ class EmoteApiController {
     @ResponseStatus(HttpStatus.CREATED)
     UploadResponse upload(@Valid @ModelAttribute UploadRequest request, HttpServletRequest http)
             throws IOException {
-        passcodes.requireGuild(http);
         return UploadResponse.from(uploads.upload(toUpload(request, http)));
     }
 
     @GetMapping("/session")
     SessionResponse session(HttpServletRequest http) {
-        return new SessionResponse(passcodes.isGuild(http), passcodes.isAdmin(http));
+        return new SessionResponse(passcodes.isAdmin(http));
     }
 
     private static EmoteUpload toUpload(UploadRequest request, HttpServletRequest http) throws IOException {

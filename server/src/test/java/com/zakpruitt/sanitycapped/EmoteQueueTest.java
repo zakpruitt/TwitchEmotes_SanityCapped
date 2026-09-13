@@ -28,10 +28,10 @@ class EmoteQueueTest extends WebTestBase {
     }
 
     @Test
-    void uploadingNeedsTheGuildPasscode() throws Exception {
-        mvc.perform(multipart("/api/emotes").file(png(Color.RED))
-                        .param("name", "noEntry").param("uploader", "zak"))
-                .andExpect(status().isUnauthorized());
+    void uploadingNeedsNoPasscode() throws Exception {
+        mvc.perform(multipart("/api/emotes").file(png(Color.ORANGE))
+                        .param("name", "openDoor").param("uploader", "zak"))
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -64,7 +64,6 @@ class EmoteQueueTest extends WebTestBase {
         mvc.perform(multipart("/api/emotes")
                         .file(new org.springframework.mock.web.MockMultipartFile(
                                 "file", "evil.png", "image/png", "not an image".getBytes()))
-                        .header(PASSCODE_HEADER, GUILD)
                         .param("name", "evil").param("uploader", "zak"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("That isn't a GIF, PNG, WebP or JPEG."));
@@ -73,15 +72,14 @@ class EmoteQueueTest extends WebTestBase {
     @Test
     void anUploadWithoutANameToThankIsRefused() throws Exception {
         mvc.perform(multipart("/api/emotes").file(png(Color.PINK))
-                        .header(PASSCODE_HEADER, GUILD)
                         .param("name", "anonymous").param("uploader", " "))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("Add your name so we know who to thank."));
     }
 
     @Test
-    void theGuildPasscodeDoesNotOpenTheQueue() throws Exception {
-        mvc.perform(get("/api/admin/pending").header(PASSCODE_HEADER, GUILD))
+    void theQueueNeedsTheAdminPasscode() throws Exception {
+        mvc.perform(get("/api/admin/pending").header(PASSCODE_HEADER, "wrong"))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -127,7 +125,6 @@ class EmoteQueueTest extends WebTestBase {
     private ResultActions upload(org.springframework.mock.web.MockMultipartFile file, String name)
             throws Exception {
         return mvc.perform(multipart("/api/emotes").file(file)
-                .header(PASSCODE_HEADER, GUILD)
                 .param("name", name)
                 .param("uploader", "zak"));
     }
