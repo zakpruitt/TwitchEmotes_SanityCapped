@@ -13,8 +13,6 @@ import java.nio.file.Path;
 public class EmotesApplication {
 
     public static void main(String[] args) throws IOException {
-        // SQLite will not create the directory its file lives in, and the
-        // datasource is built before any bean of ours could do it.
         Files.createDirectories(Path.of(System.getenv().getOrDefault("DATA_DIR", "./data")));
         SpringApplication.run(EmotesApplication.class, args);
     }
