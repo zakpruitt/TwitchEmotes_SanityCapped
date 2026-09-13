@@ -1,5 +1,5 @@
 {
-  "count": 10,
+  "count": 11,
   "emotes": [
     {
       "name": "scCloudzUlt",
@@ -41,6 +41,13 @@
       "file": "scTheChosen.tga",
       "source": "scTheChosen.jpg",
       "animated": false,
+      "aliases": []
+    },
+    {
+      "name": "scTheLastTrue",
+      "file": "scTheLastTrue.tga",
+      "source": "scTheLastTrue.gif",
+      "animated": true,
       "aliases": []
     },
     {

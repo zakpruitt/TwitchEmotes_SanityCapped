@@ -14,6 +14,7 @@ ns.pack = {
 	["scOooo"] = ns.EMOTE_ROOT .. "scOooo.tga:28:28",
 	["scPewW"] = ns.EMOTE_ROOT .. "scPewW.tga:28:28",
 	["scTheChosen"] = ns.EMOTE_ROOT .. "scTheChosen.tga:28:28",
+	["scTheLastTrue"] = ns.EMOTE_ROOT .. "scTheLastTrue.tga:28:28",
 	["scTrue"] = ns.EMOTE_ROOT .. "scTrue.tga:28:28",
 	["scTurtleKillOrder"] = ns.EMOTE_ROOT .. "scTurtleKillOrder.tga:28:28",
 	["scVynChatting"] = ns.EMOTE_ROOT .. "scVynChatting.tga:28:28",
@@ -27,6 +28,7 @@ ns.emoticons = {
 	["scOooo"] = "scOooo",
 	["scPewW"] = "scPewW",
 	["scTheChosen"] = "scTheChosen",
+	["scTheLastTrue"] = "scTheLastTrue",
 	["scTrue"] = "scTrue",
 	["scTurtleKillOrder"] = "scTurtleKillOrder",
 	["scVynChatting"] = "scVynChatting",
@@ -36,6 +38,7 @@ ns.emoticons = {
 ns.animations = {
 	[ns.EMOTE_ROOT .. "scImIn.tga"] = {["nFrames"] = 48, ["frameWidth"] = 32, ["frameHeight"] = 32, ["imageWidth"] = 32, ["imageHeight"] = 2048, ["framerate"] = 30},
 	[ns.EMOTE_ROOT .. "scOooo.tga"] = {["nFrames"] = 64, ["frameWidth"] = 32, ["frameHeight"] = 32, ["imageWidth"] = 32, ["imageHeight"] = 2048, ["framerate"] = 18},
+	[ns.EMOTE_ROOT .. "scTheLastTrue.tga"] = {["nFrames"] = 64, ["frameWidth"] = 32, ["frameHeight"] = 32, ["imageWidth"] = 32, ["imageHeight"] = 2048, ["framerate"] = 12},
 	[ns.EMOTE_ROOT .. "scWeAreGathered.tga"] = {["nFrames"] = 42, ["frameWidth"] = 32, ["frameHeight"] = 32, ["imageWidth"] = 32, ["imageHeight"] = 2048, ["framerate"] = 10},
 }
 
@@ -46,6 +49,7 @@ ns.ordered = {
 	"scOooo",
 	"scPewW",
 	"scTheChosen",
+	"scTheLastTrue",
 	"scTrue",
 	"scTurtleKillOrder",
 	"scVynChatting",
