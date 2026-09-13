@@ -1,0 +1,19 @@
+name: Deploy server
+
+# Redeploys the emote site on Coolify, but only when the site itself changes.
+# Emote approvals and release builds touch other paths, so they don't restart it.
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'server/**'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Coolify deploy
+        run: |
+          curl -fsS "${{ secrets.COOLIFY_WEBHOOK }}" \
+            -H "Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}"
