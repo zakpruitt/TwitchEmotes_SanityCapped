@@ -93,7 +93,7 @@ queue.addEventListener("click", async (event) => {
     event.target.disabled = true;
     event.target.textContent = "Committing…";
     try {
-      const decided = await postJson(`/api/admin/${id}`, { action: "approve", name: rename }, passcode);
+      const decided = await postJson(`/api/admin/${id}/approve`, { name: rename }, passcode);
       card.replaceWith(note(`${decided.name} approved — the release is building.`));
       await load();
     } catch (error) {
@@ -106,7 +106,7 @@ queue.addEventListener("click", async (event) => {
   if (event.target.matches("[data-reject]")) {
     const reason = prompt("Reason (optional, just for your own records):") ?? "";
     try {
-      await postJson(`/api/admin/${id}`, { action: "reject", reason }, passcode);
+      await postJson(`/api/admin/${id}/reject`, { reason }, passcode);
       await load();
     } catch (error) {
       alert(error.message);

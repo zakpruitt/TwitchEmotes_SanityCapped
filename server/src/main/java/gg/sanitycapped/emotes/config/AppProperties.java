@@ -9,31 +9,16 @@ import jakarta.validation.constraints.Positive;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
-/** Everything this app is configured with, all of it environment variables. */
 @Validated
 @ConfigurationProperties("app")
 public record AppProperties(
-
-        /** Holds the SQLite file and the uploaded images; needs to be a real volume. */
         @NotNull Path dataDir,
-
-        /** Handed out in guild chat. Lets people upload. */
         @NotBlank String guildPasscode,
-
-        /** Approve, reject, remove, resync. */
         @NotBlank String adminPasscode,
-
-        /** owner/name of the addon repo approved emotes are committed to. */
         @NotBlank String githubRepo,
-
-        /** Fine-grained PAT with Contents: read and write. Absent means read-only. */
         String githubToken,
-
         @Positive long maxUploadBytes,
-
-        /** Differing dHash bits below which two images are called near-duplicates. */
         @Positive int similarThreshold,
-
         @Positive int uploadsPerHour) {
 
     public Path imageDir() {

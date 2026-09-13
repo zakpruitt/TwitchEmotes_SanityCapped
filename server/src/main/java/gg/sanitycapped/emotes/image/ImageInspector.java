@@ -14,14 +14,12 @@ import javax.imageio.stream.ImageInputStream;
 
 import org.springframework.stereotype.Component;
 
-/** Decodes an upload: what it really is, how big, whether it moves, what it looks like. */
 @Component
 public class ImageInspector {
 
     private static final int HASH_WIDTH = 9;
     private static final int HASH_HEIGHT = 8;
 
-    /** Empty when the bytes are not an image we can read. */
     public Optional<ImageInfo> inspect(byte[] data) {
         Optional<ImageType> type = ImageType.sniff(data);
         if (type.isEmpty()) {
@@ -49,9 +47,8 @@ public class ImageInspector {
 
     /**
      * 64-bit difference hash: squash the first frame to 9x8 over black, then
-     * record whether each pixel is brighter than its right-hand neighbour.
-     * Resizes, recompressions and light recolours land within a few bits of
-     * the original, which is what {@code Hashes.hamming} measures.
+     * record whether each pixel is brighter than its right-hand neighbour. Near
+     * duplicates land within a few bits of the original.
      */
     public String dhash(BufferedImage source) {
         double[] grey = greyscaleThumbnail(source);
@@ -67,8 +64,8 @@ public class ImageInspector {
     }
 
     private static double[] greyscaleThumbnail(BufferedImage source) {
-        // TYPE_INT_RGB starts black, so transparent padding reads as dark rather
-        // than as bright noise -- emotes are mostly transparent around the edges.
+        // TYPE_INT_RGB starts black, so an emote's transparent padding reads as
+        // dark rather than as bright noise.
         BufferedImage small = new BufferedImage(HASH_WIDTH, HASH_HEIGHT, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = small.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);

@@ -4,26 +4,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import gg.sanitycapped.emotes.emote.EmoteException;
+import gg.sanitycapped.emotes.web.dto.ErrorResponse;
 
-/**
- * Decides what each domain failure is worth in HTTP. Everything reaches the
- * pages as {"error": "..."}, which is the only shape they render.
- */
 @RestControllerAdvice
 class ApiErrorHandler {
 
     private static final Logger log = LoggerFactory.getLogger(ApiErrorHandler.class);
 
-    record ApiError(String error) {
-    }
-
     @ExceptionHandler(EmoteException.class)
-    ResponseEntity<ApiError> handle(EmoteException e) {
+    ResponseEntity<ErrorResponse> handle(EmoteException e) {
         HttpStatus status = switch (e) {
             case EmoteException.Invalid ignored -> HttpStatus.BAD_REQUEST;
             case EmoteException.Duplicate ignored -> HttpStatus.CONFLICT;
@@ -33,22 +28,29 @@ class ApiErrorHandler {
             case EmoteException.PublishFailed ignored -> HttpStatus.BAD_GATEWAY;
             case EmoteException.MissingImage ignored -> HttpStatus.INTERNAL_SERVER_ERROR;
         };
-        return ResponseEntity.status(status).body(new ApiError(e.getMessage()));
+        return ResponseEntity.status(status).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(NotAllowedException.class)
-    ResponseEntity<ApiError> handle(NotAllowedException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiError(e.getMessage()));
+    ResponseEntity<ErrorResponse> handle(NotAllowedException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    ResponseEntity<ErrorResponse> handle(MethodArgumentNotValidException e) {
+        return ResponseEntity.badRequest()
+                .body(new ErrorResponse("Add your name so we know who to thank."));
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
-    ResponseEntity<ApiError> handle(MaxUploadSizeExceededException e) {
-        return ResponseEntity.badRequest().body(new ApiError("That image is too big."));
+    ResponseEntity<ErrorResponse> handle(MaxUploadSizeExceededException e) {
+        return ResponseEntity.badRequest().body(new ErrorResponse("That image is too big."));
     }
 
     @ExceptionHandler(Exception.class)
-    ResponseEntity<ApiError> handle(Exception e) {
+    ResponseEntity<ErrorResponse> handle(Exception e) {
         log.error("Unhandled failure", e);
-        return ResponseEntity.internalServerError().body(new ApiError("Something broke on the server."));
+        return ResponseEntity.internalServerError()
+                .body(new ErrorResponse("Something broke on the server."));
     }
 }

@@ -9,10 +9,7 @@ import org.springframework.stereotype.Component;
 
 import gg.sanitycapped.emotes.config.AppProperties;
 
-/**
- * Two shared passcodes: one handed out in guild chat so people can upload, one
- * kept by whoever approves. The pages send whichever they have as X-Passcode.
- */
+/** One passcode handed out in guild chat, one kept by whoever approves. */
 @Component
 public class Passcodes {
 

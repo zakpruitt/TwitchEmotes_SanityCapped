@@ -12,10 +12,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import gg.sanitycapped.emotes.github.GitHubClient;
 
-/**
- * A real application context on a throwaway data directory, with GitHub mocked
- * so no test can reach the network or commit anything.
- */
+/** A real context on a throwaway data directory, with GitHub mocked out. */
 @SpringBootTest
 @AutoConfigureMockMvc
 abstract class WebTestBase {

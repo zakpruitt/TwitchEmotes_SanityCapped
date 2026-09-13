@@ -1,4 +1,4 @@
-// The grid itself is rendered by Thymeleaf; this is only search and copying.
+// The grid is rendered by Thymeleaf; this is search and copy-to-clipboard.
 import { $ } from "./api.js";
 
 const grid = $("#grid");

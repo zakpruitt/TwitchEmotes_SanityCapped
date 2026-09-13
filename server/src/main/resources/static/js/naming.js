@@ -1,6 +1,5 @@
-// Port of sanitize()/apply_prefix() from tools/build_emotes.py. The site must
-// show the same trigger word the build will produce, or people name an emote
-// one thing and type another in game. Imported by the browser and by the API.
+// Mirrors Naming.java and sanitize()/apply_prefix() in tools/build_emotes.py,
+// so the name shown while typing is the one the build will produce.
 const PREFIX = "sc";
 
 // TwitchEmotes splits chat on these, so a name containing one can never match.
@@ -32,7 +31,6 @@ export function applyPrefix(name) {
   return PREFIX + core;
 }
 
-/** Final in-game trigger word for a filename stem or typed name. */
 export function triggerWord(stem) {
   return applyPrefix(sanitize(stem));
 }

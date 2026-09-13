@@ -3,13 +3,9 @@ package gg.sanitycapped.emotes.naming;
 import java.util.regex.Pattern;
 
 /**
- * Turns a filename or a typed name into the word you type in chat.
- *
- * <p>A port of sanitize()/apply_prefix() in tools/build_emotes.py, which is what
- * actually names the textures, and a sibling of static/js/naming.js, which shows
- * the result while someone types. All three have to agree, or the site promises
- * a trigger word the addon build will not produce. NamingTest pins this one
- * against values generated from the Python.
+ * Ported from sanitize()/apply_prefix() in tools/build_emotes.py, and mirrored
+ * again in static/js/naming.js. All three must agree or the site promises a
+ * trigger word the addon build will not produce; NamingTest pins this one.
  */
 public final class Naming {
 
@@ -25,7 +21,6 @@ public final class Naming {
     private Naming() {
     }
 
-    /** Final trigger word, or empty when nothing chat can match is left. */
     public static String triggerWord(String stem) {
         return applyPrefix(sanitize(stem));
     }

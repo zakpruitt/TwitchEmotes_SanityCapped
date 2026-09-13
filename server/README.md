@@ -12,9 +12,10 @@ src/main/java/gg/sanitycapped/emotes/
   image/   decoding, type sniffing, SHA-256 and the perceptual hash
   naming/  trigger words, ported from tools/build_emotes.py
   github/  the only outbound calls: commit, delete, list, latest release
-  web/     EmoteView, passcodes, error mapping
+  web/     passcodes and error mapping
     api/     JSON endpoints for the forms
     view/    PageController, which renders the three pages
+    dto/     request and response records; entities never leave the service
 src/main/resources/
   templates/layout/base.html   the shared chrome every page decorates
   templates/{browse,upload,admin}.html
@@ -25,8 +26,10 @@ Browse is rendered by Thymeleaf from the database, so it works with JavaScript
 off; its script only does search and copy-to-clipboard. Upload and admin are
 forms that talk to the JSON API.
 
-Domain failures are thrown as `EmoteException` subtypes and mapped to statuses in
-one place (`web/ApiErrorHandler`), so the service never mentions HTTP.
+Controllers only check the passcode, map a request DTO to a service call, and map
+the result to a response DTO. Domain failures are thrown as `EmoteException`
+subtypes and mapped to statuses in one place (`web/ApiErrorHandler`), so services
+never mention HTTP and `Emote` never reaches a template or a JSON body.
 
 Java 21, SQLite, images on a local volume. No database server and nothing to
 provision.

@@ -7,37 +7,31 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import gg.sanitycapped.emotes.config.AppProperties;
 import gg.sanitycapped.emotes.emote.EmoteService;
-import gg.sanitycapped.emotes.github.GitHubClient;
-import gg.sanitycapped.emotes.web.EmoteView;
+import gg.sanitycapped.emotes.github.ReleaseService;
+import gg.sanitycapped.emotes.web.dto.EmoteListResponse;
 
-/**
- * The three pages. Browse is rendered server-side from the database, so it is
- * useful with no JavaScript at all; upload and admin are forms that talk to the
- * API from there.
- */
 @Controller
 class PageController {
 
     private final EmoteService emotes;
-    private final GitHubClient github;
+    private final ReleaseService releases;
     private final AppProperties props;
 
-    PageController(EmoteService emotes, GitHubClient github, AppProperties props) {
+    PageController(EmoteService emotes, ReleaseService releases, AppProperties props) {
         this.emotes = emotes;
-        this.github = github;
+        this.releases = releases;
         this.props = props;
     }
 
-    /** Every page shows the install URL, so the layout always has it. */
     @ModelAttribute("repoUrl")
     String repoUrl() {
-        return props.repoUrl();
+        return releases.installUrl();
     }
 
     @GetMapping("/")
     String browse(Model model) {
-        model.addAttribute("emotes", emotes.approved().stream().map(EmoteView::of).toList());
-        model.addAttribute("release", github.latestRelease().orElse(null));
+        model.addAttribute("emotes", EmoteListResponse.from(emotes.approved()).emotes());
+        model.addAttribute("release", releases.latest().orElse(null));
         return "browse";
     }
 

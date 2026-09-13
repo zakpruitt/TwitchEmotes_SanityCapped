@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 
-/** The Thymeleaf pages render, and browse works without any JavaScript. */
 class PageRenderingTest extends WebTestBase {
 
     @Autowired

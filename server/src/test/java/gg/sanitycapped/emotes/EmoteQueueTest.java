@@ -23,9 +23,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.jayway.jsonpath.JsonPath;
 
-import gg.sanitycapped.emotes.github.GitHubClient;
 
-/** The queue from upload to approval, with GitHub stubbed out. */
 class EmoteQueueTest extends WebTestBase {
 
     @Autowired
@@ -40,7 +38,6 @@ class EmoteQueueTest extends WebTestBase {
 
     @Test
     void theNameIsTheOneTheBuildWouldProduce() throws Exception {
-        // The size suffix and the dash both go, exactly as build_emotes.py does it.
         upload(png(Color.RED), "peepo-Hmm-128")
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("scPeepoHmm"));
@@ -76,6 +73,15 @@ class EmoteQueueTest extends WebTestBase {
     }
 
     @Test
+    void anUploadWithoutANameToThankIsRefused() throws Exception {
+        mvc.perform(multipart("/api/emotes").file(png(Color.PINK))
+                        .header(PASSCODE_HEADER, GUILD)
+                        .param("name", "anonymous").param("uploader", " "))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Add your name so we know who to thank."));
+    }
+
+    @Test
     void theGuildPasscodeDoesNotOpenTheQueue() throws Exception {
         mvc.perform(get("/api/admin/pending").header(PASSCODE_HEADER, GUILD))
                 .andExpect(status().isUnauthorized());
@@ -87,21 +93,17 @@ class EmoteQueueTest extends WebTestBase {
 
         String id = idOf(upload(png(Color.MAGENTA), "shipIt").andExpect(status().isCreated()));
 
-        // Nothing is public until it is approved.
         mvc.perform(get("/api/emotes"))
                 .andExpect(jsonPath("$.emotes[?(@.name == 'scShipIt')]").isEmpty());
 
-        mvc.perform(post("/api/admin/{id}", id).header(PASSCODE_HEADER, ADMIN)
+        mvc.perform(post("/api/admin/{id}/approve", id).header(PASSCODE_HEADER, ADMIN)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {"action": "approve"}
-                                """))
+                        .content("{}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("approved"))
                 .andExpect(jsonPath("$.name").value("scShipIt"));
 
-        // Approval is the publish step: the image lands in tools/source/ under its
-        // trigger word, and that commit is what builds the release.
+        // Approving is the publish step: the commit is what builds the release.
         verify(github).putSource(eq("scShipIt.png"), any(), contains("uploaded by zak"));
 
         mvc.perform(get("/api/emotes"))
@@ -112,10 +114,10 @@ class EmoteQueueTest extends WebTestBase {
     void rejectingFreesTheNameForSomeoneElse() throws Exception {
         String id = idOf(upload(png(Color.CYAN), "tryAgain").andExpect(status().isCreated()));
 
-        mvc.perform(post("/api/admin/{id}", id).header(PASSCODE_HEADER, ADMIN)
+        mvc.perform(post("/api/admin/{id}/reject", id).header(PASSCODE_HEADER, ADMIN)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {"action": "reject", "reason": "blurry"}
+                                {"reason": "blurry"}
                                 """))
                 .andExpect(status().isOk());
 

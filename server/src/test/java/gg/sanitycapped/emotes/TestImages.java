@@ -11,7 +11,6 @@ import javax.imageio.ImageIO;
 
 import org.springframework.mock.web.MockMultipartFile;
 
-/** Small PNGs that differ from each other, so their hashes differ too. */
 final class TestImages {
 
     private TestImages() {

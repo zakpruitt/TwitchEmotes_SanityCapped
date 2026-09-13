@@ -1,6 +1,3 @@
-// Talking to the server, and the two small things every page needs.
-
-/** Every endpoint answers with JSON, and every failure with {error}. */
 export async function api(path, { passcode, ...init } = {}) {
   const response = await fetch(path, {
     ...init,
@@ -22,7 +19,6 @@ export async function postJson(path, body, passcode) {
   });
 }
 
-/** Passcodes are remembered per browser so nobody retypes them every visit. */
 export const remembered = {
   get(key) {
     return localStorage.getItem(key) ?? "";
@@ -32,7 +28,7 @@ export const remembered = {
   },
 };
 
-/** The server hashes uploads itself; this only pre-empts an obvious re-upload. */
+/** Only a pre-check; the server hashes the upload itself. */
 export async function sha256(file) {
   const digest = await crypto.subtle.digest("SHA-256", await file.arrayBuffer());
   return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");

@@ -3,7 +3,6 @@ package gg.sanitycapped.emotes.image;
 import java.util.Arrays;
 import java.util.Optional;
 
-/** The formats an emote may arrive as, recognised by their magic bytes. */
 public enum ImageType {
 
     GIF("gif", "image/gif", 0x47, 0x49, 0x46, 0x38),

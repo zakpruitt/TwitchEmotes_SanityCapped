@@ -1,17 +1,16 @@
 package gg.sanitycapped.emotes.web.api;
 
+import java.time.Duration;
+
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.Duration;
-
 import gg.sanitycapped.emotes.emote.EmoteService;
 import gg.sanitycapped.emotes.image.ImageType;
 
-/** Uploaded originals, served straight off this machine's disk. */
 @RestController
 class ImageController {
 

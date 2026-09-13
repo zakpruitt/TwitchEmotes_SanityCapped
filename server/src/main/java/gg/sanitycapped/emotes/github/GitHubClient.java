@@ -12,11 +12,7 @@ import org.springframework.web.client.RestClient;
 
 import gg.sanitycapped.emotes.config.AppProperties;
 
-/**
- * The only thing here that reaches outside the app. Approved emotes are
- * committed into the addon repo's tools/source/, and that push is what makes
- * GitHub Actions rebuild the textures and publish a release for WoWUp.
- */
+/** Commits into the addon repo's tools/source/, which is what triggers a release build. */
 @Component
 public class GitHubClient {
 
@@ -40,7 +36,6 @@ public class GitHubClient {
         this.raw = builder.clone().build();
     }
 
-    /** A file in tools/source/, which is one emote's original image. */
     public record SourceFile(String name, String sha, String downloadUrl) {
 
         public String stem() {
@@ -51,7 +46,6 @@ public class GitHubClient {
     public record Release(String tag, String url, String publishedAt) {
     }
 
-    /** Everything the pack is currently built from. */
     @SuppressWarnings("unchecked")
     public List<SourceFile> listSource() {
         List<Map<String, Object>> files = api.get()
@@ -91,7 +85,6 @@ public class GitHubClient {
                 .toBodilessEntity();
     }
 
-    /** Emotes that predate the site have no recorded sha, so look theirs up. */
     @SuppressWarnings("unchecked")
     public Optional<String> shaFor(String fileName) {
         try {
@@ -105,7 +98,6 @@ public class GitHubClient {
         }
     }
 
-    /** What WoWUp would install right now, or empty if nothing is published yet. */
     @SuppressWarnings("unchecked")
     public Optional<Release> latestRelease() {
         try {
@@ -120,10 +112,7 @@ public class GitHubClient {
         }
     }
 
-    /**
-     * The repo is owner/name, and a URI template variable would percent-encode
-     * that slash into a 404, so it belongs in the literal path.
-     */
+    /** owner/name goes in the literal path: a template variable would encode the slash. */
     private String repoPath(String suffix) {
         return "/repos/" + props.githubRepo() + suffix;
     }

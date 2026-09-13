@@ -9,7 +9,6 @@ public final class Hashes {
     private Hashes() {
     }
 
-    /** Identity for "this is the same file", regardless of what it is named. */
     public static String sha256(byte[] data) {
         try {
             return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(data));
@@ -18,7 +17,7 @@ public final class Hashes {
         }
     }
 
-    /** Differing bits between two dHashes; 64 (as different as possible) if either is missing. */
+    /** Differing bits between two dHashes; 64 when either is missing. */
     public static int hamming(String a, String b) {
         if (a == null || b == null || a.length() != b.length()) {
             return Long.SIZE;

@@ -23,7 +23,6 @@ let fileHash = null;
 els.passcode.value = remembered.get("passcode");
 els.uploader.value = remembered.get("uploader");
 
-/** What the build script would name this file, shown before anyone commits to it. */
 function typedName() {
   return els.name.value.trim() || (chosen ? chosen.name.replace(/\.[^.]+$/, "") : "");
 }
@@ -54,7 +53,7 @@ async function refresh() {
       clear(els.message);
     }
   } catch {
-    // The server checks again on submit, so a failed pre-check is not worth a fuss.
+    // The server checks again on submit.
   }
 }
 

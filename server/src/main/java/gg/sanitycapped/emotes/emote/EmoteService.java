@@ -18,11 +18,6 @@ import gg.sanitycapped.emotes.image.ImageInfo;
 import gg.sanitycapped.emotes.image.ImageInspector;
 import gg.sanitycapped.emotes.naming.Naming;
 
-/**
- * The rules of the queue: what may be uploaded, what counts as a duplicate, and
- * what approving means. Approving commits the image into the addon repo, and
- * that commit is what makes CI build and publish the release.
- */
 @Service
 public class EmoteService {
 
@@ -59,7 +54,6 @@ public class EmoteService {
         return images.get(fileName);
     }
 
-    /** Live feedback for the upload form, before anything is sent. */
     public DuplicateCheck check(String typedName, String sha256) {
         String name = Naming.triggerWord(typedName);
         return new DuplicateCheck(
@@ -70,41 +64,38 @@ public class EmoteService {
     }
 
     @Transactional
-    public Emote upload(byte[] data, String typedName, String uploader, String ip) {
+    public Emote upload(EmoteUpload upload) {
         Instant now = clock.instant();
-        checkRateLimit(ip, now);
+        checkRateLimit(upload.ip(), now);
 
-        if (uploader == null || uploader.isBlank()) {
+        if (upload.uploader() == null || upload.uploader().isBlank()) {
             throw new EmoteException.Invalid("Add your name so we know who to thank.");
         }
-        if (data.length > props.maxUploadBytes()) {
+        if (upload.data().length > props.maxUploadBytes()) {
             throw new EmoteException.Invalid(
                     "That image is over %d MB. Trim it down first.".formatted(props.maxUploadMegabytes()));
         }
 
-        ImageInfo info = inspector.inspect(data)
+        ImageInfo info = inspector.inspect(upload.data())
                 .orElseThrow(() -> new EmoteException.Invalid("That isn't a GIF, PNG, WebP or JPEG."));
 
-        String name = requireUsableName(typedName);
-        String sha256 = Hashes.sha256(data);
+        String name = requireUsableName(namedBy(upload));
+        String sha256 = Hashes.sha256(upload.data());
         refuseDuplicates(name, sha256);
 
-        Emote emote = Emote.pending(name, data, info, uploader.trim(), sha256,
+        Emote emote = Emote.pending(name, upload.data(), info, upload.uploader().trim(), sha256,
                 nearDuplicateWarning(info.dhash()), now);
 
-        images.put(emote.fileName(), data);
+        images.put(emote.fileName(), upload.data());
         repository.insert(emote);
-        repository.logUpload(ip, now);
+        repository.logUpload(upload.ip(), now);
 
         log.info("Queued {} from {} ({} bytes{})", emote.name(), emote.uploader(), emote.bytes(),
                 emote.animated() ? ", animated" : "");
         return emote;
     }
 
-    /**
-     * Commits the image into the repo's tools/source/, which triggers the build
-     * workflow. This is the publish step; there is no separate one.
-     */
+    /** Committing the image is the publish step: the push is what builds the release. */
     @Transactional
     public Emote approve(String id, String renameTo) {
         Emote emote = require(id);
@@ -129,13 +120,14 @@ public class EmoteService {
     }
 
     @Transactional
-    public void reject(String id, String reason) {
+    public String reject(String id, String reason) {
         Emote emote = require(id);
         if (emote.isApproved()) {
             throw new EmoteException.Duplicate("Already in the pack. Remove it instead.");
         }
         repository.reject(id, trimmed(reason), clock.instant());
         log.info("Rejected {}", emote.name());
+        return emote.name();
     }
 
     /** Deleting the source image makes the next build drop its texture too. */
@@ -148,6 +140,14 @@ public class EmoteService {
         images.delete(emote.fileName());
         repository.delete(id);
         log.info("Removed {}", emote.name());
+    }
+
+    private static String namedBy(EmoteUpload upload) {
+        if (upload.requestedName() != null && !upload.requestedName().isBlank()) {
+            return upload.requestedName();
+        }
+        String fileName = upload.originalFileName();
+        return fileName == null ? "" : fileName.replaceFirst("\\.[^.]+$", "");
     }
 
     private void checkRateLimit(String ip, Instant now) {
@@ -181,10 +181,7 @@ public class EmoteService {
         });
     }
 
-    /**
-     * A near-match is a warning on the queue rather than a refusal: a resized or
-     * recoloured variant of an existing emote is sometimes exactly the point.
-     */
+    /** Warned about rather than refused: a resized variant is sometimes the point. */
     private String nearDuplicateWarning(String dhash) {
         return repository.live().stream()
                 .filter(other -> Hashes.hamming(dhash, other.dhash()) <= props.similarThreshold())
@@ -205,8 +202,6 @@ public class EmoteService {
 
     private String publish(String fileName, byte[] data, String message) {
         try {
-            // The file is named after the trigger word, so the build's own naming
-            // pass is a no-op and what ships is what the site promised.
             return github.putSource(fileName, data, message);
         } catch (RuntimeException e) {
             log.warn("Commit of {} failed", fileName, e);

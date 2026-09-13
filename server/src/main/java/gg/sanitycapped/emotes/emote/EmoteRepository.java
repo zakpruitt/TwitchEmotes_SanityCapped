@@ -9,10 +9,7 @@ import java.util.Optional;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
-/**
- * SQLite, through JdbcClient. "Live" means pending or approved: rejected rows
- * are invisible to every lookup, which is what frees their name and hash again.
- */
+/** "Live" is pending or approved; rejected rows are invisible to every lookup. */
 @Repository
 public class EmoteRepository {
 

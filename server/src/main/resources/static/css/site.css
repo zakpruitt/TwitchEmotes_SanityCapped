@@ -358,7 +358,7 @@ button.small {
   color: var(--warn);
 }
 
-/* How it will look in game ------------------------------------------------ */
+/* Chat preview ------------------------------------------------------------ */
 
 .chatline {
   display: flex;

@@ -15,11 +15,9 @@ import gg.sanitycapped.emotes.image.ImageInspector;
 import gg.sanitycapped.emotes.naming.Naming;
 
 /**
- * Adopts whatever is already in the repo's tools/source/.
- *
- * <p>The repo is the archive; this machine's disk is a cache. So a fresh volume
- * comes up holding the whole pack instead of an empty browse page, and an emote
- * you add to the repo by hand turns up on the site as well.
+ * Adopts whatever is already in the repo's tools/source/. The repo is the
+ * archive and this machine's disk a cache, so a fresh volume comes up holding
+ * the whole pack and emotes added by hand turn up on the site too.
  */
 @Component
 public class RepoSync implements ApplicationRunner {
@@ -41,17 +39,16 @@ public class RepoSync implements ApplicationRunner {
         this.clock = clock;
     }
 
-    /** Failing here must never stop the app: the queue works offline. */
     @Override
     public void run(ApplicationArguments args) {
         try {
             sync();
         } catch (RuntimeException e) {
+            // The queue works offline, so this must never stop the app.
             log.warn("Could not sync from the repo at startup: {}", e.getMessage());
         }
     }
 
-    /** @return how many emotes were adopted */
     public int sync() {
         int adopted = 0;
         for (GitHubClient.SourceFile file : github.listSource()) {

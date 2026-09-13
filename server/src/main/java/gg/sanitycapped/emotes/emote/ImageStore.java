@@ -10,10 +10,6 @@ import org.springframework.stereotype.Component;
 
 import gg.sanitycapped.emotes.config.AppProperties;
 
-/**
- * The uploaded originals, on this machine's disk. A cache, not the archive: the
- * approved ones also live in the repo, and a wiped volume refills from there.
- */
 @Component
 public class ImageStore {
 
@@ -56,7 +52,7 @@ public class ImageStore {
         }
     }
 
-    /** Names reach this from a URL, so refuse anything that climbs out of the directory. */
+    /** Names arrive from URLs, so refuse anything climbing out of the directory. */
     private Path resolve(String fileName) {
         Path file = directory.resolve(fileName).normalize();
         if (!file.startsWith(directory)) {
