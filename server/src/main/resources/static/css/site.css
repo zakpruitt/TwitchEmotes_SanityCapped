@@ -455,6 +455,10 @@ button.small {
     display: none;
 }
 
+#sent {
+    margin: 0 0 16px;
+}
+
 .msg.err {
     background: #2a1214;
     color: var(--bad);

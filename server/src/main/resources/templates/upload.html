@@ -10,8 +10,9 @@
     <h1>Upload an emote</h1>
     <p class="sub">
         GIF, PNG, WebP or JPEG, up to <span th:text="${maxMegabytes}">2</span> MB.
-        It goes into a queue and ships to everyone once it's approved.
     </p>
+
+    <p class="msg ok" id="sent" role="status"></p>
 
     <form autocomplete="off" class="card" id="upload-form">
         <label class="drop" for="file" id="drop">

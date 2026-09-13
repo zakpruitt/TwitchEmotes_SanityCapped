@@ -14,6 +14,7 @@ const els = {
     submit: $("#submit"),
     reset: $("#reset"),
     message: $("#message"),
+    sent: $("#sent"),
 };
 
 let chosen = null;
@@ -58,6 +59,7 @@ async function refresh() {
 async function choose(file) {
     if (!file) return;
     chosen = file;
+    clear(els.sent);
     fileHash = await sha256(file);
     els.preview.src = URL.createObjectURL(file);
     els.preview.hidden = false;
@@ -104,7 +106,8 @@ form.addEventListener("submit", async (event) => {
     try {
         const queued = await api("/api/emotes", {method: "POST", body});
         els.reset.click();
-        show(els.message, `${queued.name} is in the queue. It'll show up in the addon once it's approved.`);
+        show(els.sent, `Request sent! ${queued.name} is in the queue and will show up in the addon once it's approved.`);
+        window.scrollTo({top: 0, behavior: "smooth"});
     } catch (error) {
         show(els.message, error.message, "err");
         els.submit.disabled = false;
