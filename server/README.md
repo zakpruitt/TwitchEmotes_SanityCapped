@@ -7,16 +7,22 @@ hand.
 
 ```
 src/main/java/com/zakpruitt/sanitycapped/
-  config/  AppProperties (validated), the Clock bean, the Instant converter
-  emote/   the Emote entity, its Spring Data repositories, the image store,
-           and EmoteService — the rules
-  image/   decoding, type sniffing, SHA-256 and the perceptual hash
-  naming/  trigger words, ported from tools/build_emotes.py
-  github/  the only outbound calls: commit, delete, list, latest release
-  web/     passcodes and error mapping
-    api/     JSON endpoints for the forms
-    view/    PageController, which renders the three pages
-    dto/     request and response records; entities never leave the service
+  config/          AppProperties, the Clock bean, the Instant converter
+  emote/           Emote and UploadLog entities, EmoteStatus
+    repository/      Spring Data interfaces
+    service/         EmoteService (the rules), RepoSync, ImageStore
+    model/           EmoteUpload, DuplicateCheck
+    exception/       EmoteException
+  image/           decoding, type sniffing, SHA-256 and the perceptual hash
+  naming/          trigger words, ported from tools/build_emotes.py
+  github/          the only outbound calls
+  web/
+    api/             JSON endpoints
+    view/            PageController, which renders the pages
+    dto/request/     UploadRequest, ApproveRequest, RejectRequest
+    dto/response/    EmoteResponse and friends
+    security/        Passcodes
+    exception/       ApiErrorHandler, NotAllowedException
 src/main/resources/
   templates/layout/base.html   the shared chrome every page decorates
   templates/{browse,upload,admin}.html
@@ -66,6 +72,9 @@ All of it is environment variables (see `src/main/resources/application.yml`):
 | `GITHUB_TOKEN`   | Fine-grained PAT, this repo only, **Contents: read and write**.      |
 | `GITHUB_REPO`    | `owner/name`. Defaults to this repo.                                 |
 | `PORT`           | Defaults to 8080.                                                    |
+
+`/actuator/health` is exposed (with liveness and readiness groups); `fly.toml`
+points its health check at the readiness probe.
 
 ## Deploying to Fly.io
 

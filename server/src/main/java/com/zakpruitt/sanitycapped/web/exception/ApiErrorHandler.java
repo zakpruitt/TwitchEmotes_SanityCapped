@@ -1,9 +1,8 @@
-package com.zakpruitt.sanitycapped.web;
+package com.zakpruitt.sanitycapped.web.exception;
 
-import com.zakpruitt.sanitycapped.emote.EmoteException;
-import com.zakpruitt.sanitycapped.web.dto.ErrorResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.zakpruitt.sanitycapped.emote.exception.EmoteException;
+import com.zakpruitt.sanitycapped.web.dto.response.ErrorResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -12,9 +11,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @RestControllerAdvice
+@Slf4j
 class ApiErrorHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(ApiErrorHandler.class);
 
     @ExceptionHandler(EmoteException.class)
     ResponseEntity<ErrorResponse> handle(EmoteException e) {

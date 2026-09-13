@@ -28,4 +28,8 @@ app:
   similar-threshold: 6
   uploads-per-hour: 10
 
+management:
+  endpoints.web.exposure.include: health
+  endpoint.health.probes.enabled: true
+
 logging.level.com.zakpruitt: INFO

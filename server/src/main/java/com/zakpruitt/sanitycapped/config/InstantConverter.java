@@ -1,9 +1,9 @@
 package com.zakpruitt.sanitycapped.config;
 
-import java.time.Instant;
-
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
+
+import java.time.Instant;
 
 /** Timestamps are epoch seconds in SQLite, which keeps them readable and sortable. */
 @Converter(autoApply = true)

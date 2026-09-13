@@ -1,4 +1,4 @@
-package com.zakpruitt.sanitycapped.web.dto;
+package com.zakpruitt.sanitycapped.web.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.web.multipart.MultipartFile;

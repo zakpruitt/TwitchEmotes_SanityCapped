@@ -1,12 +1,11 @@
 package com.zakpruitt.sanitycapped.emote;
 
-import java.util.Locale;
-import java.util.Set;
-
+import com.fasterxml.jackson.annotation.JsonValue;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.Locale;
+import java.util.Set;
 
 public enum EmoteStatus {
 

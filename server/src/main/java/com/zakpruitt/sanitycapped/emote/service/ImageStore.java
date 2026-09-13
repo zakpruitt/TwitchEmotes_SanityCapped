@@ -1,4 +1,4 @@
-package com.zakpruitt.sanitycapped.emote;
+package com.zakpruitt.sanitycapped.emote.service;
 
 import com.zakpruitt.sanitycapped.config.AppProperties;
 import org.springframework.stereotype.Component;

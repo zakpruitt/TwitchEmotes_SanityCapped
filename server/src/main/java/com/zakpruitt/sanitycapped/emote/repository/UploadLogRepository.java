@@ -1,8 +1,9 @@
-package com.zakpruitt.sanitycapped.emote;
+package com.zakpruitt.sanitycapped.emote.repository;
+
+import com.zakpruitt.sanitycapped.emote.UploadLog;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.Instant;
-
-import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UploadLogRepository extends JpaRepository<UploadLog, Long> {
 

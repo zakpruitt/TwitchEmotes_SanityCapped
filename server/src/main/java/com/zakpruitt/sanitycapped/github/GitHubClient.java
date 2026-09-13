@@ -1,5 +1,6 @@
 package com.zakpruitt.sanitycapped.github;
 
+
 import com.zakpruitt.sanitycapped.config.AppProperties;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -15,6 +16,7 @@ import java.util.Optional;
  * Commits into the addon repo's tools/source/, which is what triggers a release build.
  */
 @Component
+
 public class GitHubClient {
 
     private static final String SOURCE_PATH = "/contents/tools/source";

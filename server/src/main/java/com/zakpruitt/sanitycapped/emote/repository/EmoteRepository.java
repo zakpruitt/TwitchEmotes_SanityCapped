@@ -1,10 +1,12 @@
-package com.zakpruitt.sanitycapped.emote;
+package com.zakpruitt.sanitycapped.emote.repository;
+
+import com.zakpruitt.sanitycapped.emote.Emote;
+import com.zakpruitt.sanitycapped.emote.EmoteStatus;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EmoteRepository extends JpaRepository<Emote, String> {
 

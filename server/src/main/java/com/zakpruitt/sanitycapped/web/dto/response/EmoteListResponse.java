@@ -1,4 +1,4 @@
-package com.zakpruitt.sanitycapped.web.dto;
+package com.zakpruitt.sanitycapped.web.dto.response;
 
 import com.zakpruitt.sanitycapped.emote.Emote;
 

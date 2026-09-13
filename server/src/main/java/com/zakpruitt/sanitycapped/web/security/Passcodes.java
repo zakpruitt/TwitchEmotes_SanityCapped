@@ -1,7 +1,9 @@
-package com.zakpruitt.sanitycapped.web;
+package com.zakpruitt.sanitycapped.web.security;
 
 import com.zakpruitt.sanitycapped.config.AppProperties;
+import com.zakpruitt.sanitycapped.web.exception.NotAllowedException;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -11,15 +13,13 @@ import java.security.MessageDigest;
  * One passcode handed out in guild chat, one kept by whoever approves.
  */
 @Component
+@RequiredArgsConstructor
 public class Passcodes {
 
     private static final String HEADER = "X-Passcode";
 
     private final AppProperties props;
 
-    Passcodes(AppProperties props) {
-        this.props = props;
-    }
 
     private static String given(HttpServletRequest request) {
         String header = request.getHeader(HEADER);

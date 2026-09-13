@@ -1,12 +1,15 @@
-package com.zakpruitt.sanitycapped.emote;
+package com.zakpruitt.sanitycapped.emote.service;
 
+import com.zakpruitt.sanitycapped.emote.Emote;
+import com.zakpruitt.sanitycapped.emote.EmoteStatus;
+import com.zakpruitt.sanitycapped.emote.repository.EmoteRepository;
 import com.zakpruitt.sanitycapped.github.GitHubClient;
 import com.zakpruitt.sanitycapped.image.Hashes;
 import com.zakpruitt.sanitycapped.image.ImageInfo;
 import com.zakpruitt.sanitycapped.image.ImageInspector;
 import com.zakpruitt.sanitycapped.naming.Naming;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -20,9 +23,10 @@ import java.time.Clock;
  * the whole pack and emotes added by hand turn up on the site too.
  */
 @Component
+@Slf4j
+@RequiredArgsConstructor
 public class RepoSync implements ApplicationRunner {
 
-    private static final Logger log = LoggerFactory.getLogger(RepoSync.class);
 
     private final EmoteRepository emotes;
     private final ImageStore images;
@@ -30,14 +34,6 @@ public class RepoSync implements ApplicationRunner {
     private final GitHubClient github;
     private final Clock clock;
 
-    RepoSync(EmoteRepository emotes, ImageStore images, ImageInspector inspector,
-             GitHubClient github, Clock clock) {
-        this.emotes = emotes;
-        this.images = images;
-        this.inspector = inspector;
-        this.github = github;
-        this.clock = clock;
-    }
 
     @Override
     public void run(ApplicationArguments args) {

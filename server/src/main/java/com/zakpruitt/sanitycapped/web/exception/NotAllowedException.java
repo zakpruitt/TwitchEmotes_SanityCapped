@@ -1,4 +1,4 @@
-package com.zakpruitt.sanitycapped.web;
+package com.zakpruitt.sanitycapped.web.exception;
 
 public class NotAllowedException extends RuntimeException {
 

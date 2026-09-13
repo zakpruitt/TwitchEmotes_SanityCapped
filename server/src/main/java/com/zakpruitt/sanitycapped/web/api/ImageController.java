@@ -1,7 +1,8 @@
 package com.zakpruitt.sanitycapped.web.api;
 
-import com.zakpruitt.sanitycapped.emote.EmoteService;
+import com.zakpruitt.sanitycapped.emote.service.EmoteService;
 import com.zakpruitt.sanitycapped.image.ImageType;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,13 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.Duration;
 
 @RestController
+@RequiredArgsConstructor
 class ImageController {
 
     private final EmoteService emotes;
 
-    ImageController(EmoteService emotes) {
-        this.emotes = emotes;
-    }
 
     @GetMapping("/img/{fileName}")
     ResponseEntity<byte[]> image(@PathVariable String fileName) {

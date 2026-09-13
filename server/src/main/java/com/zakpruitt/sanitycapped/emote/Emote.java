@@ -1,16 +1,20 @@
 package com.zakpruitt.sanitycapped.emote;
 
-import java.time.Instant;
-import java.util.UUID;
-
+import com.zakpruitt.sanitycapped.image.ImageInfo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import com.zakpruitt.sanitycapped.image.ImageInfo;
+import java.time.Instant;
+import java.util.UUID;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "emotes")
 public class Emote {
 
@@ -49,9 +53,6 @@ public class Emote {
 
     @Column(name = "github_sha")
     private String githubSha;
-
-    protected Emote() {
-    }
 
     private Emote(String name, String ext, String sha256, String dhash, String uploader,
                   EmoteStatus status, String note, boolean animated, long bytes,
@@ -111,55 +112,4 @@ public class Emote {
         return status == EmoteStatus.APPROVED;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getExt() {
-        return ext;
-    }
-
-    public String getSha256() {
-        return sha256;
-    }
-
-    public String getDhash() {
-        return dhash;
-    }
-
-    public String getUploader() {
-        return uploader;
-    }
-
-    public EmoteStatus getStatus() {
-        return status;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public boolean isAnimated() {
-        return animated;
-    }
-
-    public long getBytes() {
-        return bytes;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public Instant getDecidedAt() {
-        return decidedAt;
-    }
-
-    public String getGithubSha() {
-        return githubSha;
-    }
 }

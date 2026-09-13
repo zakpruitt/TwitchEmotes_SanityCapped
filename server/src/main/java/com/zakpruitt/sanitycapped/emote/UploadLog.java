@@ -1,15 +1,20 @@
 package com.zakpruitt.sanitycapped.emote;
 
-import java.time.Instant;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.Instant;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "upload_log")
 public class UploadLog {
 
@@ -23,19 +28,9 @@ public class UploadLog {
     @Column(name = "at", nullable = false)
     private Instant at;
 
-    protected UploadLog() {
-    }
-
     public UploadLog(String ip, Instant at) {
         this.ip = ip;
         this.at = at;
     }
 
-    public String getIp() {
-        return ip;
-    }
-
-    public Instant getAt() {
-        return at;
-    }
 }

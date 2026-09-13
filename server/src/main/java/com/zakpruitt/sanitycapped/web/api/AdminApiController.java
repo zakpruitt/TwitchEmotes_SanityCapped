@@ -1,25 +1,26 @@
 package com.zakpruitt.sanitycapped.web.api;
 
-import com.zakpruitt.sanitycapped.emote.EmoteService;
-import com.zakpruitt.sanitycapped.emote.RepoSync;
-import com.zakpruitt.sanitycapped.web.Passcodes;
-import com.zakpruitt.sanitycapped.web.dto.*;
+import com.zakpruitt.sanitycapped.emote.service.EmoteService;
+import com.zakpruitt.sanitycapped.emote.service.RepoSync;
+import com.zakpruitt.sanitycapped.web.dto.request.ApproveRequest;
+import com.zakpruitt.sanitycapped.web.dto.request.RejectRequest;
+import com.zakpruitt.sanitycapped.web.dto.response.DecisionResponse;
+import com.zakpruitt.sanitycapped.web.dto.response.PendingQueueResponse;
+import com.zakpruitt.sanitycapped.web.dto.response.SyncResponse;
+import com.zakpruitt.sanitycapped.web.security.Passcodes;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/admin")
+@RequiredArgsConstructor
 class AdminApiController {
 
     private final EmoteService emotes;
     private final RepoSync repoSync;
     private final Passcodes passcodes;
 
-    AdminApiController(EmoteService emotes, RepoSync repoSync, Passcodes passcodes) {
-        this.emotes = emotes;
-        this.repoSync = repoSync;
-        this.passcodes = passcodes;
-    }
 
     @GetMapping("/pending")
     PendingQueueResponse pending(HttpServletRequest http) {

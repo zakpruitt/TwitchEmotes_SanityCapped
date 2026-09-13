@@ -1,26 +1,23 @@
 package com.zakpruitt.sanitycapped.web.view;
 
 import com.zakpruitt.sanitycapped.config.AppProperties;
-import com.zakpruitt.sanitycapped.emote.EmoteService;
+import com.zakpruitt.sanitycapped.emote.service.EmoteService;
 import com.zakpruitt.sanitycapped.github.ReleaseService;
-import com.zakpruitt.sanitycapped.web.dto.EmoteListResponse;
+import com.zakpruitt.sanitycapped.web.dto.response.EmoteListResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 @Controller
+@RequiredArgsConstructor
 class PageController {
 
     private final EmoteService emotes;
     private final ReleaseService releases;
     private final AppProperties props;
 
-    PageController(EmoteService emotes, ReleaseService releases, AppProperties props) {
-        this.emotes = emotes;
-        this.releases = releases;
-        this.props = props;
-    }
 
     @ModelAttribute("repoUrl")
     String repoUrl() {

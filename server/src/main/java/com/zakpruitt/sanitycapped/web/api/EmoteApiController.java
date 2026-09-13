@@ -1,11 +1,16 @@
 package com.zakpruitt.sanitycapped.web.api;
 
-import com.zakpruitt.sanitycapped.emote.EmoteService;
-import com.zakpruitt.sanitycapped.emote.EmoteUpload;
-import com.zakpruitt.sanitycapped.web.Passcodes;
-import com.zakpruitt.sanitycapped.web.dto.*;
+import com.zakpruitt.sanitycapped.emote.model.EmoteUpload;
+import com.zakpruitt.sanitycapped.emote.service.EmoteService;
+import com.zakpruitt.sanitycapped.web.dto.request.UploadRequest;
+import com.zakpruitt.sanitycapped.web.dto.response.CheckResponse;
+import com.zakpruitt.sanitycapped.web.dto.response.EmoteListResponse;
+import com.zakpruitt.sanitycapped.web.dto.response.SessionResponse;
+import com.zakpruitt.sanitycapped.web.dto.response.UploadResponse;
+import com.zakpruitt.sanitycapped.web.security.Passcodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,15 +18,12 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 @RestController
+@RequiredArgsConstructor
 class EmoteApiController {
 
     private final EmoteService emotes;
     private final Passcodes passcodes;
 
-    EmoteApiController(EmoteService emotes, Passcodes passcodes) {
-        this.emotes = emotes;
-        this.passcodes = passcodes;
-    }
 
     @GetMapping("/api/emotes")
     EmoteListResponse approved() {

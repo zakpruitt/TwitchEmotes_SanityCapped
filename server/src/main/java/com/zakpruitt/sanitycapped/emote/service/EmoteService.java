@@ -1,4 +1,23 @@
-package com.zakpruitt.sanitycapped.emote;
+package com.zakpruitt.sanitycapped.emote.service;
+
+import com.zakpruitt.sanitycapped.config.AppProperties;
+import com.zakpruitt.sanitycapped.emote.Emote;
+import com.zakpruitt.sanitycapped.emote.EmoteStatus;
+import com.zakpruitt.sanitycapped.emote.UploadLog;
+import com.zakpruitt.sanitycapped.emote.exception.EmoteException;
+import com.zakpruitt.sanitycapped.emote.model.DuplicateCheck;
+import com.zakpruitt.sanitycapped.emote.model.EmoteUpload;
+import com.zakpruitt.sanitycapped.emote.repository.EmoteRepository;
+import com.zakpruitt.sanitycapped.emote.repository.UploadLogRepository;
+import com.zakpruitt.sanitycapped.github.GitHubClient;
+import com.zakpruitt.sanitycapped.image.Hashes;
+import com.zakpruitt.sanitycapped.image.ImageInfo;
+import com.zakpruitt.sanitycapped.image.ImageInspector;
+import com.zakpruitt.sanitycapped.naming.Naming;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.Duration;
@@ -6,22 +25,11 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.zakpruitt.sanitycapped.config.AppProperties;
-import com.zakpruitt.sanitycapped.github.GitHubClient;
-import com.zakpruitt.sanitycapped.image.Hashes;
-import com.zakpruitt.sanitycapped.image.ImageInfo;
-import com.zakpruitt.sanitycapped.image.ImageInspector;
-import com.zakpruitt.sanitycapped.naming.Naming;
-
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class EmoteService {
 
-    private static final Logger log = LoggerFactory.getLogger(EmoteService.class);
     private static final int MAX_NAME_LENGTH = 40;
     private static final Duration RATE_WINDOW = Duration.ofHours(1);
 
@@ -33,16 +41,6 @@ public class EmoteService {
     private final GitHubClient github;
     private final Clock clock;
 
-    EmoteService(AppProperties props, EmoteRepository emotes, UploadLogRepository uploadLog,
-                 ImageStore images, ImageInspector inspector, GitHubClient github, Clock clock) {
-        this.props = props;
-        this.emotes = emotes;
-        this.uploadLog = uploadLog;
-        this.images = images;
-        this.inspector = inspector;
-        this.github = github;
-        this.clock = clock;
-    }
 
     @Transactional(readOnly = true)
     public List<Emote> approved() {
