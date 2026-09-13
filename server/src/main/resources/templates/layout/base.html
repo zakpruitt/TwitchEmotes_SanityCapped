@@ -4,25 +4,39 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
-    <title th:replace="${title}">Sanity Capped Emotes</title>
+    <meta content="#0a0a0b" name="theme-color">
+    <title th:replace="${title}">Sanity Capped Emote Pack</title>
+    <link rel="icon" th:href="@{/brand/favicon.png}" type="image/png">
     <link rel="stylesheet" th:href="@{/css/site.css}">
 </head>
 <body>
 
 <header class="site">
-    <a class="brand" th:href="@{/}">Sanity Capped <b>Emotes</b></a>
-    <nav>
-        <a th:classappend="${active == 'browse'} ? 'active'" th:href="@{/}">Browse</a>
-        <a th:classappend="${active == 'upload'} ? 'active'" th:href="@{/upload}">Upload</a>
-        <a th:classappend="${active == 'admin'} ? 'active'" th:href="@{/admin}">Admin</a>
-    </nav>
+    <div class="bar">
+        <a class="brand" th:href="@{/}">
+            <img alt="" height="40" th:src="@{/brand/crown.png}" width="40">
+            <span class="wordmark">
+                <span class="top">Sanity</span>
+                <span class="bottom">Capped</span>
+            </span>
+            <span class="divider"></span>
+            <span class="product">Emote Pack</span>
+        </a>
+        <nav>
+            <a th:classappend="${active == 'browse'} ? 'active'" th:href="@{/}">Browse</a>
+            <a th:classappend="${active == 'upload'} ? 'active'" th:href="@{/upload}">Upload</a>
+            <a th:classappend="${active == 'admin'} ? 'active'" th:href="@{/admin}">Admin</a>
+        </nav>
+    </div>
 </header>
 
 <main th:replace="${content}"></main>
 
 <footer class="site">
-    <span>Type an emote's name in chat. Everyone with the addon sees it.</span>
-    <a rel="noopener" target="_blank" th:href="${repoUrl}">GitHub</a>
+    <div class="bar">
+        <span>Type an emote's name in chat. Everyone with the addon sees it.</span>
+        <a rel="noopener" target="_blank" th:href="${repoUrl}">GitHub</a>
+    </div>
 </footer>
 
 <th:block th:replace="${scripts} ?: ~{}"></th:block>

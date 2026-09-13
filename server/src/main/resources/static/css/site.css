@@ -1,18 +1,19 @@
-/* Sanity Capped Emotes — one dark theme, one accent, no framework. */
-
 :root {
-    --bg: #0e0d13;
-    --panel: #17161f;
-    --panel-2: #1e1d28;
-    --line: #2b2936;
-    --text: #eae8f2;
-    --muted: #9f9bb3;
-    --accent: #a97bff;
-    --accent-dim: #6f4fd0;
+    --bg: #0a0a0b;
+    --panel: #131315;
+    --panel-2: #1b1b1e;
+    --line: #2a2a2e;
+    --text: #f2f2f3;
+    --muted: #9a9aa2;
+    --accent: #e3121b;
+    --accent-hover: #ff2a33;
+    --accent-dim: #8f1016;
     --good: #5ed39a;
-    --bad: #ff7a7a;
+    --bad: #ff5c63;
     --warn: #ffcc6b;
-    --radius: 12px;
+    --radius: 10px;
+    --width: min(1080px, 100% - 40px);
+    --chrome-bg: rgba(10, 10, 11, 0.88);
 }
 
 * {
@@ -20,20 +21,33 @@
 }
 
 body {
-    margin: 0;
+    display: flex;
+    flex-direction: column;
     min-height: 100vh;
-    background: radial-gradient(900px 500px at 50% -10%, #241f3d 0%, transparent 70%), var(--bg);
+    margin: 0;
+    background: radial-gradient(700px 420px at 0% 100%, rgba(227, 18, 27, 0.14), transparent 70%),
+    radial-gradient(700px 420px at 100% 100%, rgba(227, 18, 27, 0.1), transparent 70%),
+    var(--bg) fixed;
     color: var(--text);
     font: 15px/1.55 "Segoe UI", Inter, system-ui, sans-serif;
 }
 
 a {
-    color: var(--accent);
+    color: var(--accent-hover);
 }
 
 h1 {
     font-size: 26px;
     margin: 0 0 6px;
+}
+
+h1::after {
+    content: "";
+    display: block;
+    width: 44px;
+    height: 3px;
+    margin-top: 10px;
+    background: var(--accent);
 }
 
 h2 {
@@ -63,62 +77,119 @@ h2 {
 
 /* Chrome ------------------------------------------------------------------ */
 
-header.site {
+header.site,
+footer.site {
     position: sticky;
-    top: 0;
     z-index: 5;
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    padding: 18px 24px;
-    border-bottom: 1px solid var(--line);
-    background: rgba(14, 13, 19, 0.8);
+    background: var(--chrome-bg);
     backdrop-filter: blur(8px);
 }
 
+header.site {
+    top: 0;
+}
+
+footer.site {
+    bottom: 0;
+}
+
+.bar {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    width: var(--width);
+    margin: 0 auto;
+}
+
+header.site .bar {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+footer.site .bar {
+    justify-content: center;
+    gap: 12px;
+    padding: 14px 0;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 13px;
+}
+
 .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     margin-right: auto;
-    font-weight: 700;
     color: var(--text);
     text-decoration: none;
 }
 
-.brand b {
+.brand img {
+    display: block;
+}
+
+.wordmark {
+    display: flex;
+    flex-direction: column;
+    font-weight: 700;
+    line-height: 1.05;
+    text-transform: uppercase;
+}
+
+.wordmark {
+    font-size: 14px;
+    letter-spacing: 0.28em;
+}
+
+.wordmark .bottom {
     color: var(--accent);
+}
+
+.brand .divider {
+    width: 2px;
+    height: 30px;
+    background: var(--accent);
+}
+
+.product {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+nav {
+    display: flex;
+    gap: 4px;
 }
 
 nav a {
     padding: 6px 12px;
-    border-radius: 8px;
+    border-bottom: 2px solid transparent;
     color: var(--muted);
     font-weight: 600;
     text-decoration: none;
 }
 
-nav a:hover,
+nav a:hover {
+    color: var(--text);
+}
+
 nav a.active {
     color: var(--text);
-    background: var(--panel-2);
+    border-bottom-color: var(--accent);
 }
 
 main {
-    max-width: 1080px;
+    flex: 1;
+    width: var(--width);
     margin: 0 auto;
-    padding: 28px 20px 60px;
+    padding: 32px 0 60px;
 }
 
 main.narrow {
     max-width: 620px;
-}
-
-footer.site {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    padding: 24px;
-    border-top: 1px solid var(--line);
-    color: var(--muted);
-    font-size: 13px;
 }
 
 /* Blocks ------------------------------------------------------------------ */
@@ -136,6 +207,24 @@ footer.site {
     align-items: center;
     gap: 12px;
     margin-bottom: 26px;
+    border-left: 3px solid var(--accent);
+}
+
+.install > div:first-child {
+    margin-right: 28px;
+}
+
+.install .tag {
+    margin-left: auto;
+    padding: 4px 10px;
+    border-color: var(--accent-dim);
+    color: var(--accent-hover);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.install .tag:hover {
+    border-color: var(--accent);
 }
 
 .install code {
@@ -202,7 +291,7 @@ footer.site {
 
 .emote:hover {
     transform: translateY(-2px);
-    border-color: var(--accent-dim);
+    border-color: var(--accent);
 }
 
 .emote img {
@@ -229,7 +318,7 @@ input[type="password"],
 input[type="search"] {
     padding: 10px 12px;
     border: 1px solid var(--line);
-    border-radius: 9px;
+    border-radius: 8px;
     background: var(--panel-2);
     color: var(--text);
     font: inherit;
@@ -237,7 +326,7 @@ input[type="search"] {
 }
 
 input:focus {
-    border-color: var(--accent-dim);
+    border-color: var(--accent);
 }
 
 input[type="search"] {
@@ -273,37 +362,56 @@ input[type="search"] {
 button {
     padding: 10px 16px;
     border: 0;
-    border-radius: 9px;
+    border-radius: 8px;
     background: var(--accent);
-    color: #17121f;
+    color: #fff;
     font: 600 14px/1 inherit;
     cursor: pointer;
 }
 
 button:hover {
-    filter: brightness(1.08);
+    background: var(--accent-hover);
 }
 
 button:disabled {
-    opacity: 0.5;
+    opacity: 0.45;
     cursor: not-allowed;
 }
 
-button.ghost {
+button:disabled:hover {
+    background: var(--accent);
+}
+
+button.ghost,
+button.ghost:disabled:hover {
     border: 1px solid var(--line);
     background: var(--panel-2);
     color: var(--text);
 }
 
-button.ok {
+button.ghost:hover {
+    border-color: var(--muted);
+}
+
+button.ok,
+button.ok:hover {
     background: var(--good);
     color: #10261c;
 }
 
-button.danger {
-    border: 1px solid #4a2a2f;
+button.ok:hover {
+    filter: brightness(1.08);
+}
+
+button.danger,
+button.danger:hover {
+    border: 1px solid #4a1d20;
     background: transparent;
     color: var(--bad);
+}
+
+button.danger:hover {
+    border-color: var(--bad);
 }
 
 button.small {
@@ -321,10 +429,14 @@ button.small {
     cursor: pointer;
 }
 
+.drop:hover,
 .drop.over {
     border-color: var(--accent);
-    background: var(--panel-2);
     color: var(--text);
+}
+
+.drop.over {
+    background: rgba(227, 18, 27, 0.06);
 }
 
 .drop img {
@@ -335,7 +447,7 @@ button.small {
 .msg {
     margin-top: 14px;
     padding: 11px 13px;
-    border-radius: 9px;
+    border-radius: 8px;
     font-size: 14px;
 }
 
@@ -344,7 +456,7 @@ button.small {
 }
 
 .msg.err {
-    background: #2a1a1e;
+    background: #2a1214;
     color: var(--bad);
 }
 
@@ -368,9 +480,9 @@ button.small {
     margin: 10px 0 0;
     padding: 9px 12px;
     border: 1px solid var(--line);
-    border-radius: 9px;
-    background: #101016;
-    color: #f5e6b0;
+    border-radius: 8px;
+    background: #070708;
+    color: #40ff40;
     font-size: 14px;
 }
 
@@ -393,7 +505,7 @@ button.small {
     width: 72px;
     height: 72px;
     padding: 4px;
-    border-radius: 9px;
+    border-radius: 8px;
     background: var(--panel-2);
     object-fit: contain;
 }
@@ -411,13 +523,26 @@ button.small {
     width: 150px;
 }
 
-@media (max-width: 620px) {
-    header.site {
-        padding: 14px;
+@media (max-width: 720px) {
+    .brand .divider,
+    .product {
+        display: none;
     }
 
     .pending {
         flex-direction: column;
         align-items: flex-start;
+    }
+}
+
+@media (max-width: 460px) {
+    .wordmark {
+        display: none;
+    }
+
+    footer.site .bar {
+        flex-direction: column;
+        gap: 2px;
+        text-align: center;
     }
 }

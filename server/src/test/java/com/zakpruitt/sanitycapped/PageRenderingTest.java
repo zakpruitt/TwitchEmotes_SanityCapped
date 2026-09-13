@@ -33,6 +33,13 @@ class PageRenderingTest extends WebTestBase {
     }
 
     @Test
+    void theLogoIsServedAndNotTakenForAnEmote() throws Exception {
+        // /img/** belongs to uploaded emotes, so brand assets must live elsewhere.
+        mvc.perform(get("/brand/crown.png"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void adminPageRenders() throws Exception {
         mvc.perform(get("/admin"))
                 .andExpect(status().isOk())
