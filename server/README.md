@@ -1,121 +1,81 @@
-# Emote site
+# Sanity Capped Emote Site
 
-Spring Boot 4 app where the guild uploads emotes and you approve them. Approving
-commits the image into `tools/source/` in this repo, which makes GitHub Actions
-rebuild the addon and publish a release WoWUp picks up. Nobody pushes anything by
-hand.
+Spring Boot app where the guild uploads emotes and an admin approves them. Approving commits the image to `tools/source/`, which triggers a new addon release.
 
-```
-src/main/java/com/zakpruitt/sanitycapped/
-  config/          AppProperties, the Clock bean, the Instant converter
-  emote/
-    model/           Emote and UploadLog entities, EmoteStatus
-    dto/             EmoteUpload, DuplicateCheck
-    repository/      Spring Data interfaces
-    service/         EmoteQueryService      reads for browse and the queue
-                     EmoteUploadService     upload -> pending emote
-                     EmoteReviewService     approve, reject, remove
-                     DuplicateDetector      name, exact-file and look-alike rules
-                     NamePolicy             is the trigger word usable
-                     UploadRateLimiter      uploads per IP per hour
-                     PackPublisher          commits/deletes in tools/source/
-                     RepoSyncService        adopts what's already in the repo
-                     StartupRepoSync        runs that sync on boot
-    exception/       EmoteException
-  image/           ImageStore, decoding, type sniffing, SHA-256 and the perceptual hash
-    dto/             ImageInfo
-  naming/          trigger words, ported from tools/build_emotes.py
-  github/          the only outbound calls
-    dto/             SourceFile, Release
-  web/
-    api/             JSON endpoints
-    view/            PageController, which renders the pages
-    dto/request/     UploadRequest, ApproveRequest, RejectRequest
-    dto/response/    EmoteResponse and friends
-    security/        Passcodes
-    exception/       ApiErrorHandler, NotAllowedException
-src/main/resources/
-  templates/layout/base.html   the shared chrome every page decorates
-  templates/{browse,upload,admin}.html
-  static/css, static/js        one stylesheet, one module per page
-```
+## Tech Stack
 
-Browse is rendered by Thymeleaf from the database, so it works with JavaScript
-off; its script only does search and copy-to-clipboard. Upload and admin are
-forms that talk to the JSON API.
+Java 21, Spring Boot 4, Spring Data JPA on SQLite, Thymeleaf. Images are stored on a local volume.
 
-Controllers only check the passcode, map a request DTO to a service call, and map
-the result to a response DTO. Domain failures are thrown as `EmoteException`
-subtypes and mapped to statuses in one place (`web/ApiErrorHandler`), so services
-never mention HTTP and `Emote` never reaches a template or a JSON body.
-
-Java 21, Spring Data JPA over SQLite (Hibernate's community dialect), images on
-a local volume. No database server and nothing to provision. `schema.sql` owns
-the schema; `ddl-auto` is `none`, because the partial unique indexes that make
-rejection free a name are not something Hibernate would generate.
-
-## Running it locally
+## Running Locally
 
 ```bash
 cd server
 DATA_DIR=./data GUILD_PASSCODE=letmein ADMIN_PASSCODE=admin-test mvn spring-boot:run
 ```
 
-Open http://localhost:8080. On first boot it reads `tools/source/` from the repo
-over the GitHub API and adopts everything already in the pack, so browse is
-populated immediately — no seeding step. Without `GITHUB_TOKEN` set, uploads and
-rejections work but approving returns "No GitHub token configured", since
-approval means committing.
+Open http://localhost:8080. On startup it imports every emote already in `tools/source/`. Without `GITHUB_TOKEN`, uploads and rejections work but approvals are disabled.
+
+## Testing
 
 ```bash
-mvn test     # naming parity with build_emotes.py, plus the upload/approve flow
+mvn test
 ```
 
 ## Configuration
 
-All of it is environment variables (see `src/main/resources/application.yml`):
+| Variable         | Description                                            |
+| ---------------- | ------------------------------------------------------ |
+| `DATA_DIR`       | Where images and `emotes.db` live (persistent volume)  |
+| `GUILD_PASSCODE` | Shared in guild chat, allows uploads                   |
+| `ADMIN_PASSCODE` | Allows approve, reject, remove and resync              |
+| `GITHUB_TOKEN`   | Fine-grained PAT for this repo, Contents read/write    |
+| `GITHUB_REPO`    | `owner/name`, defaults to this repo                    |
+| `PORT`           | Defaults to `8080`                                     |
 
-| Variable         | What                                                                |
-| ---------------- | ------------------------------------------------------------------- |
-| `DATA_DIR`       | Where images and `emotes.db` live. Must be a persistent volume.      |
-| `GUILD_PASSCODE` | What you paste in guild chat. Lets people upload.                    |
-| `ADMIN_PASSCODE` | Yours. Approve, reject, remove, resync.                              |
-| `GITHUB_TOKEN`   | Fine-grained PAT, this repo only, **Contents: read and write**.      |
-| `GITHUB_REPO`    | `owner/name`. Defaults to this repo.                                 |
-| `PORT`           | Defaults to 8080.                                                    |
+Health check: `/actuator/health`
 
-`/actuator/health` is exposed (with liveness and readiness groups); `fly.toml`
-points its health check at the readiness probe.
-
-## Deploying to Fly.io
+## Deployment (Fly.io)
 
 ```bash
 cd server
-fly launch --no-deploy          # keeps fly.toml; pick your own app name
+fly launch --no-deploy
 fly volumes create emotes_data --size 1
 fly secrets set GUILD_PASSCODE=... ADMIN_PASSCODE=... GITHUB_TOKEN=...
 fly deploy
 ```
 
-`fly.toml` mounts the volume at `/data` and lets the machine sleep when idle, so
-this sits inside the free allowance. The first request after a nap waits a few
-seconds for the JVM to wake.
+The volume is a cache. Approved emotes live in the repo, so a fresh volume repopulates on boot.
 
-The volume holds the pending queue and a cache of the images. It is not the only
-copy of the pack: approved emotes live in `tools/source/` in the repo, and a
-fresh volume repopulates itself from there on boot.
+## Duplicate Checks
 
-## How duplicates are caught
+1. **Name:** the trigger word must not already be pending or approved.
+2. **Exact file:** SHA-256 match is refused.
+3. **Similar image:** a perceptual hash within 6 bits shows a warning in the queue but is allowed.
 
-1. **Name** — the final trigger word must be free among pending and approved emotes.
-2. **Exact file** — SHA-256 of the bytes. The browser also pre-checks this while you fill in the form.
-3. **Looks the same** — a 64-bit dHash of the first frame, computed server-side after
-   actually decoding the image. Within 6 bits of an existing emote it's a warning
-   flagged on the queue, not a block: a resized or recoloured variant is sometimes
-   the point.
+Rejecting an emote frees its name and hash.
 
-Rejected rows release their name and hash, so someone can try again.
+## Project Structure
 
-`static/naming.js`, `core/Naming.java` and `sanitize()`/`apply_prefix()` in
-`tools/build_emotes.py` are three ports of the same rules. `NamingTest` pins the
-Java one against the Python one; if you change the rules, change all three.
+```
+src/main/java/com/zakpruitt/sanitycapped/
+  config/      app properties, clock, converters
+  emote/
+    model/       Emote, UploadLog, EmoteStatus
+    dto/         internal records
+    repository/  Spring Data repositories
+    service/     upload, review, duplicates, publishing, repo sync
+    exception/   EmoteException
+  image/       storage, decoding, hashing
+  naming/      trigger word rules
+  github/      GitHub API client
+  web/
+    api/         JSON endpoints
+    view/        page controller
+    dto/         request and response records
+    security/    passcode checks
+    exception/   error handling
+src/main/resources/
+  templates/   Thymeleaf pages
+  static/      CSS and JS
+  schema.sql   database schema
+```
