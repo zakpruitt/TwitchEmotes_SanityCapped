@@ -1,7 +1,7 @@
 package com.zakpruitt.sanitycapped.emote.repository;
 
-import com.zakpruitt.sanitycapped.emote.Emote;
-import com.zakpruitt.sanitycapped.emote.EmoteStatus;
+import com.zakpruitt.sanitycapped.emote.model.Emote;
+import com.zakpruitt.sanitycapped.emote.model.EmoteStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Collection;

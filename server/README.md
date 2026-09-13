@@ -8,14 +8,25 @@ hand.
 ```
 src/main/java/com/zakpruitt/sanitycapped/
   config/          AppProperties, the Clock bean, the Instant converter
-  emote/           Emote and UploadLog entities, EmoteStatus
+  emote/
+    model/           Emote and UploadLog entities, EmoteStatus
+    dto/             EmoteUpload, DuplicateCheck
     repository/      Spring Data interfaces
-    service/         EmoteService (the rules), RepoSync, ImageStore
-    model/           EmoteUpload, DuplicateCheck
+    service/         EmoteQueryService      reads for browse and the queue
+                     EmoteUploadService     upload -> pending emote
+                     EmoteReviewService     approve, reject, remove
+                     DuplicateDetector      name, exact-file and look-alike rules
+                     NamePolicy             is the trigger word usable
+                     UploadRateLimiter      uploads per IP per hour
+                     PackPublisher          commits/deletes in tools/source/
+                     RepoSyncService        adopts what's already in the repo
+                     StartupRepoSync        runs that sync on boot
     exception/       EmoteException
-  image/           decoding, type sniffing, SHA-256 and the perceptual hash
+  image/           ImageStore, decoding, type sniffing, SHA-256 and the perceptual hash
+    dto/             ImageInfo
   naming/          trigger words, ported from tools/build_emotes.py
   github/          the only outbound calls
+    dto/             SourceFile, Release
   web/
     api/             JSON endpoints
     view/            PageController, which renders the pages

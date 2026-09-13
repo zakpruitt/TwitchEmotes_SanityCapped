@@ -1,6 +1,6 @@
-package com.zakpruitt.sanitycapped.emote;
+package com.zakpruitt.sanitycapped.emote.model;
 
-import com.zakpruitt.sanitycapped.image.ImageInfo;
+import com.zakpruitt.sanitycapped.image.dto.ImageInfo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

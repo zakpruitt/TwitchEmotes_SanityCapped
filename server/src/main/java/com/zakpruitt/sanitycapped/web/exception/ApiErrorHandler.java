@@ -14,7 +14,6 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 @Slf4j
 class ApiErrorHandler {
 
-
     @ExceptionHandler(EmoteException.class)
     ResponseEntity<ErrorResponse> handle(EmoteException e) {
         HttpStatus status = switch (e) {

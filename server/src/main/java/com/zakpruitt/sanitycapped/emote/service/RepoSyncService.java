@@ -1,76 +1,66 @@
 package com.zakpruitt.sanitycapped.emote.service;
 
-import com.zakpruitt.sanitycapped.emote.Emote;
-import com.zakpruitt.sanitycapped.emote.EmoteStatus;
+import com.zakpruitt.sanitycapped.emote.model.Emote;
 import com.zakpruitt.sanitycapped.emote.repository.EmoteRepository;
 import com.zakpruitt.sanitycapped.github.GitHubClient;
+import com.zakpruitt.sanitycapped.github.dto.SourceFile;
 import com.zakpruitt.sanitycapped.image.Hashes;
-import com.zakpruitt.sanitycapped.image.ImageInfo;
+import com.zakpruitt.sanitycapped.image.dto.ImageInfo;
 import com.zakpruitt.sanitycapped.image.ImageInspector;
+import com.zakpruitt.sanitycapped.image.ImageStore;
 import com.zakpruitt.sanitycapped.naming.Naming;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
+import java.util.Optional;
 
 /**
  * Adopts whatever is already in the repo's tools/source/. The repo is the
  * archive and this machine's disk a cache, so a fresh volume comes up holding
  * the whole pack and emotes added by hand turn up on the site too.
  */
-@Component
+@Service
 @Slf4j
 @RequiredArgsConstructor
-public class RepoSync implements ApplicationRunner {
-
+public class RepoSyncService {
 
     private final EmoteRepository emotes;
     private final ImageStore images;
     private final ImageInspector inspector;
+    private final DuplicateDetector duplicates;
     private final GitHubClient github;
     private final Clock clock;
 
-
-    @Override
-    public void run(ApplicationArguments args) {
-        try {
-            sync();
-        } catch (RuntimeException e) {
-            // The queue works offline, so this must never stop the app.
-            log.warn("Could not sync from the repo at startup: {}", e.getMessage());
-        }
-    }
-
+    /** @return how many emotes were new to this site */
     @Transactional
     public int sync() {
-        int adopted = 0;
-        for (GitHubClient.SourceFile file : github.listSource()) {
-            if (adopt(file)) {
-                adopted++;
-            }
-        }
+        int adopted = (int) github.listSource().stream()
+                .filter(this::adopt)
+                .count();
+
         if (adopted > 0) {
             log.info("Adopted {} emote(s) already in the repo", adopted);
         }
         return adopted;
     }
 
-    private boolean adopt(GitHubClient.SourceFile file) {
-        String name = Naming.triggerWord(file.stem());
-        if (emotes.findByNameAndStatusIn(name, EmoteStatus.LIVE).isPresent()) {
+    private boolean adopt(SourceFile file) {
+        String name = Naming.triggerWord(Naming.stem(file.name()));
+        if (duplicates.isNameLive(name)) {
             return false;
         }
+
         byte[] data = github.download(file.downloadUrl());
-        ImageInfo info = inspector.inspect(data).orElse(null);
-        if (info == null) {
+        Optional<ImageInfo> info = inspector.inspect(data);
+        if (info.isEmpty()) {
             log.warn("Skipping {}: not an image we can read", file.name());
             return false;
         }
-        Emote emote = Emote.adopted(name, data, info, Hashes.sha256(data), file.sha(), clock.instant());
+
+        Emote emote = Emote.adopted(name, data, info.get(), Hashes.sha256(data), file.sha(), clock.instant());
         images.put(emote.fileName(), data);
         emotes.save(emote);
         return true;

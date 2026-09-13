@@ -1,6 +1,5 @@
 package com.zakpruitt.sanitycapped.emote.exception;
 
-
 /**
  * Failures in the language of emotes; ApiErrorHandler decides their status.
  */

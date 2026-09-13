@@ -25,6 +25,13 @@ public final class Naming {
     private Naming() {
     }
 
+    /**
+     * peepoHmm-128.png -> peepoHmm-128.
+     */
+    public static String stem(String fileName) {
+        return fileName == null ? "" : fileName.replaceFirst("\\.[^.]+$", "");
+    }
+
     public static String triggerWord(String stem) {
         return applyPrefix(sanitize(stem));
     }
@@ -37,6 +44,7 @@ public final class Naming {
         while (SIZE_SUFFIX.matcher(name).find()) {
             name = SIZE_SUFFIX.matcher(name).replaceAll("");
         }
+
         return CHAT_DELIMITERS.matcher(name).replaceAll("");
     }
 
@@ -50,6 +58,7 @@ public final class Naming {
         if (alreadyPrefixed(name)) {
             return name;
         }
+
         String core = shouting(name)
                 ? Character.toUpperCase(name.charAt(0)) + name.substring(1).toLowerCase()
                 : Character.toUpperCase(name.charAt(0)) + name.substring(1);
@@ -72,6 +81,7 @@ public final class Naming {
         if (name.length() <= 1) {
             return false;
         }
+
         boolean sawLetter = false;
         for (char c : name.toCharArray()) {
             if (Character.isLetter(c)) {

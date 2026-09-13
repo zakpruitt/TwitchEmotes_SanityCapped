@@ -9,9 +9,7 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
-/**
- * One passcode handed out in guild chat, one kept by whoever approves.
- */
+/** One passcode handed out in guild chat, one kept by whoever approves. */
 @Component
 @RequiredArgsConstructor
 public class Passcodes {
@@ -20,27 +18,14 @@ public class Passcodes {
 
     private final AppProperties props;
 
-
-    private static String given(HttpServletRequest request) {
-        String header = request.getHeader(HEADER);
-        return header == null ? "" : header;
-    }
-
-    private static boolean equal(String given, String expected) {
-        if (expected == null || expected.isBlank() || given.isEmpty()) {
-            return false;
-        }
-        return MessageDigest.isEqual(given.getBytes(StandardCharsets.UTF_8),
-                expected.getBytes(StandardCharsets.UTF_8));
-    }
-
+    /** The admin passcode works everywhere the guild one does. */
     public boolean isGuild(HttpServletRequest request) {
         String given = given(request);
-        return equal(given, props.guildPasscode()) || equal(given, props.adminPasscode());
+        return matches(given, props.guildPasscode()) || matches(given, props.adminPasscode());
     }
 
     public boolean isAdmin(HttpServletRequest request) {
-        return equal(given(request), props.adminPasscode());
+        return matches(given(request), props.adminPasscode());
     }
 
     public void requireGuild(HttpServletRequest request) {
@@ -53,5 +38,19 @@ public class Passcodes {
         if (!isAdmin(request)) {
             throw new NotAllowedException("Admin passcode required.");
         }
+    }
+
+    private static String given(HttpServletRequest request) {
+        String header = request.getHeader(HEADER);
+        return header == null ? "" : header;
+    }
+
+    /** Constant-time, so the comparison doesn't leak how much of a guess was right. */
+    private static boolean matches(String given, String expected) {
+        if (expected == null || expected.isBlank() || given.isEmpty()) {
+            return false;
+        }
+        return MessageDigest.isEqual(given.getBytes(StandardCharsets.UTF_8),
+                expected.getBytes(StandardCharsets.UTF_8));
     }
 }

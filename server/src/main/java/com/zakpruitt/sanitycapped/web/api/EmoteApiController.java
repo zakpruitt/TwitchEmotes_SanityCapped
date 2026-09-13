@@ -1,7 +1,9 @@
 package com.zakpruitt.sanitycapped.web.api;
 
-import com.zakpruitt.sanitycapped.emote.model.EmoteUpload;
-import com.zakpruitt.sanitycapped.emote.service.EmoteService;
+import com.zakpruitt.sanitycapped.emote.dto.EmoteUpload;
+import com.zakpruitt.sanitycapped.emote.service.DuplicateDetector;
+import com.zakpruitt.sanitycapped.emote.service.EmoteQueryService;
+import com.zakpruitt.sanitycapped.emote.service.EmoteUploadService;
 import com.zakpruitt.sanitycapped.web.dto.request.UploadRequest;
 import com.zakpruitt.sanitycapped.web.dto.response.CheckResponse;
 import com.zakpruitt.sanitycapped.web.dto.response.EmoteListResponse;
@@ -11,42 +13,54 @@ import com.zakpruitt.sanitycapped.web.security.Passcodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
 @RestController
+@RequestMapping("/api")
 @RequiredArgsConstructor
 class EmoteApiController {
 
-    private final EmoteService emotes;
+    private final EmoteQueryService queries;
+    private final EmoteUploadService uploads;
+    private final DuplicateDetector duplicates;
     private final Passcodes passcodes;
 
-
-    @GetMapping("/api/emotes")
+    @GetMapping("/emotes")
     EmoteListResponse approved() {
-        return EmoteListResponse.from(emotes.approved());
+        return EmoteListResponse.from(queries.approved());
     }
 
-    @GetMapping("/api/check")
+    @GetMapping("/check")
     CheckResponse check(@RequestParam(defaultValue = "") String name,
                         @RequestParam(defaultValue = "") String sha) {
-        return CheckResponse.from(emotes.check(name, sha));
+        return CheckResponse.from(duplicates.check(name, sha));
     }
 
-    @PostMapping(value = "/api/emotes", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    ResponseEntity<UploadResponse> upload(@Valid @ModelAttribute UploadRequest request,
-                                          HttpServletRequest http) throws IOException {
+    @PostMapping(value = "/emotes", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    UploadResponse upload(@Valid @ModelAttribute UploadRequest request, HttpServletRequest http)
+            throws IOException {
         passcodes.requireGuild(http);
-        EmoteUpload upload = new EmoteUpload(request.file().getBytes(), request.name(),
-                request.file().getOriginalFilename(), request.uploader(), ClientIp.of(http));
-        return ResponseEntity.status(201).body(UploadResponse.from(emotes.upload(upload)));
+        return UploadResponse.from(uploads.upload(toUpload(request, http)));
     }
 
-    @GetMapping("/api/session")
+    @GetMapping("/session")
     SessionResponse session(HttpServletRequest http) {
         return new SessionResponse(passcodes.isGuild(http), passcodes.isAdmin(http));
+    }
+
+    private static EmoteUpload toUpload(UploadRequest request, HttpServletRequest http) throws IOException {
+        return new EmoteUpload(request.file().getBytes(), request.name(),
+                request.file().getOriginalFilename(), request.uploader(), ClientIp.of(http));
     }
 }

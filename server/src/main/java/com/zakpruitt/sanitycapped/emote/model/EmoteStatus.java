@@ -1,4 +1,4 @@
-package com.zakpruitt.sanitycapped.emote;
+package com.zakpruitt.sanitycapped.emote.model;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import jakarta.persistence.AttributeConverter;

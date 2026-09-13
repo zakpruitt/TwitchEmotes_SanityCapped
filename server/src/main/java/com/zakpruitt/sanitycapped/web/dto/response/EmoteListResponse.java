@@ -1,6 +1,6 @@
 package com.zakpruitt.sanitycapped.web.dto.response;
 
-import com.zakpruitt.sanitycapped.emote.Emote;
+import com.zakpruitt.sanitycapped.emote.model.Emote;
 
 import java.util.List;
 

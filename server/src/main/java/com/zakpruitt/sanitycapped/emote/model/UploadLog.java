@@ -1,4 +1,4 @@
-package com.zakpruitt.sanitycapped.emote;
+package com.zakpruitt.sanitycapped.emote.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

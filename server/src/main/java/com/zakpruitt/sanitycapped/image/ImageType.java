@@ -47,16 +47,25 @@ public enum ImageType {
     }
 
     private boolean matches(byte[] data) {
+        return startsWithSignature(data) && (this != WEBP || spellsWebp(data));
+    }
+
+    private boolean startsWithSignature(byte[] data) {
         if (data.length < signature.length) {
             return false;
         }
+
         for (int i = 0; i < signature.length; i++) {
             if ((data[i] & 0xFF) != signature[i]) {
                 return false;
             }
         }
-        // RIFF alone is any RIFF container; WEBP is spelled out at offset 8.
-        return this != WEBP || (data.length > 12
-                && data[8] == 'W' && data[9] == 'E' && data[10] == 'B' && data[11] == 'P');
+        return true;
+    }
+
+    /** RIFF alone is any RIFF container; WEBP is spelled out at offset 8. */
+    private static boolean spellsWebp(byte[] data) {
+        return data.length > 12
+                && data[8] == 'W' && data[9] == 'E' && data[10] == 'B' && data[11] == 'P';
     }
 }

@@ -15,6 +15,7 @@ final class ClientIp {
         if (forwarded != null && !forwarded.isBlank()) {
             return forwarded.split(",")[0].trim();
         }
+
         String remote = request.getRemoteAddr();
         return remote == null ? "unknown" : remote;
     }

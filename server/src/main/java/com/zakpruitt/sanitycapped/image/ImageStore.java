@@ -1,4 +1,4 @@
-package com.zakpruitt.sanitycapped.emote.service;
+package com.zakpruitt.sanitycapped.image;
 
 import com.zakpruitt.sanitycapped.config.AppProperties;
 import org.springframework.stereotype.Component;
@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 
+/** Image files on the data volume, named by emote id. */
 @Component
 public class ImageStore {
 
@@ -23,23 +24,24 @@ public class ImageStore {
         }
     }
 
-    public void put(String fileName, byte[] data) {
-        try {
-            Files.write(resolve(fileName), data);
-        } catch (IOException e) {
-            throw new UncheckedIOException("Cannot write " + fileName, e);
-        }
-    }
-
     public Optional<byte[]> get(String fileName) {
         Path file = resolve(fileName);
         if (!Files.isRegularFile(file)) {
             return Optional.empty();
         }
+
         try {
             return Optional.of(Files.readAllBytes(file));
         } catch (IOException e) {
             return Optional.empty();
+        }
+    }
+
+    public void put(String fileName, byte[] data) {
+        try {
+            Files.write(resolve(fileName), data);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Cannot write " + fileName, e);
         }
     }
 
@@ -51,9 +53,7 @@ public class ImageStore {
         }
     }
 
-    /**
-     * Names arrive from URLs, so refuse anything climbing out of the directory.
-     */
+    /** Names arrive from URLs, so refuse anything climbing out of the directory. */
     private Path resolve(String fileName) {
         Path file = directory.resolve(fileName).normalize();
         if (!file.startsWith(directory)) {

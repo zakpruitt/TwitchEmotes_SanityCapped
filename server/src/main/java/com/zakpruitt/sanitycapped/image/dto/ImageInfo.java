@@ -1,4 +1,6 @@
-package com.zakpruitt.sanitycapped.image;
+package com.zakpruitt.sanitycapped.image.dto;
+
+import com.zakpruitt.sanitycapped.image.ImageType;
 
 public record ImageInfo(ImageType type, int width, int height, int frames, String dhash) {
 
