@@ -36,7 +36,8 @@ class AdminApiController {
     }
 
     @PostMapping("/{id}/approve")
-    DecisionResponse approve(@PathVariable String id, @RequestBody(required = false) ApproveRequest request,
+    DecisionResponse approve(@PathVariable String id,
+                             @RequestBody(required = false) ApproveRequest request,
                              HttpServletRequest http) {
         passcodes.requireAdmin(http);
 
@@ -45,7 +46,8 @@ class AdminApiController {
     }
 
     @PostMapping("/{id}/reject")
-    DecisionResponse reject(@PathVariable String id, @RequestBody(required = false) RejectRequest request,
+    DecisionResponse reject(@PathVariable String id,
+                            @RequestBody(required = false) RejectRequest request,
                             HttpServletRequest http) {
         passcodes.requireAdmin(http);
 
