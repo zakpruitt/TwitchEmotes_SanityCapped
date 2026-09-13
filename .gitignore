@@ -5,3 +5,5 @@ server/target/
 server/data/
 .idea/
 *.iml
+/data/
+*.db
