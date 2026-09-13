@@ -9,6 +9,6 @@ public record ImageInfo(ImageType type, int width, int height, int frames, Strin
     }
 
     public String extension() {
-        return type.extension();
+        return type.getExtension();
     }
 }

@@ -1,5 +1,7 @@
 package com.zakpruitt.sanitycapped;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.awt.*;
@@ -9,10 +11,8 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import javax.imageio.ImageIO;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 final class TestImages {
-
-    private TestImages() {
-    }
 
     static MockMultipartFile png(Color color) {
         return new MockMultipartFile("file", "emote.png", "image/png", bytes(color));

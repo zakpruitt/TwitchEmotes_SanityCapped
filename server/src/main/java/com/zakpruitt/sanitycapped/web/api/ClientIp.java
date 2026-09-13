@@ -1,11 +1,11 @@
 package com.zakpruitt.sanitycapped.web.api;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 final class ClientIp {
-
-    private ClientIp() {
-    }
 
     /**
      * Behind Fly or Render the caller's address arrives forwarded.

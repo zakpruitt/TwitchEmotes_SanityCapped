@@ -1,5 +1,7 @@
 package com.zakpruitt.sanitycapped.image;
 
+import lombok.Getter;
+
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -10,7 +12,9 @@ public enum ImageType {
     JPEG("jpg", "image/jpeg", 0xFF, 0xD8, 0xFF),
     WEBP("webp", "image/webp", 0x52, 0x49, 0x46, 0x46);
 
+    @Getter
     private final String extension;
+    @Getter
     private final String contentType;
     private final int[] signature;
 
@@ -34,16 +38,8 @@ public enum ImageType {
         return Arrays.stream(values())
                 .filter(type -> type.extension.equals(ext) || ("jpeg".equals(ext) && type == JPEG))
                 .findFirst()
-                .map(ImageType::contentType)
+                .map(ImageType::getContentType)
                 .orElse("application/octet-stream");
-    }
-
-    public String extension() {
-        return extension;
-    }
-
-    public String contentType() {
-        return contentType;
     }
 
     private boolean matches(byte[] data) {

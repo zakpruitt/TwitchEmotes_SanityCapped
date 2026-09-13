@@ -1,5 +1,8 @@
 package com.zakpruitt.sanitycapped.naming;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.util.regex.Pattern;
 
 /**
@@ -7,6 +10,7 @@ import java.util.regex.Pattern;
  * again in static/js/naming.js. All three must agree or the site promises a
  * trigger word the addon build will not produce; NamingTest pins this one.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Naming {
 
     private static final String PREFIX = "sc";
@@ -21,9 +25,6 @@ public final class Naming {
      */
     private static final Pattern SIZE_SUFFIX =
             Pattern.compile("[-_](?:\\d{1,4}px|\\d{1,4}x|\\d{1,4})$", Pattern.CASE_INSENSITIVE);
-
-    private Naming() {
-    }
 
     /**
      * peepoHmm-128.png -> peepoHmm-128.
