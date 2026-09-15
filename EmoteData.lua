@@ -9,6 +9,7 @@ ns.EMOTE_ROOT = "Interface\\AddOns\\" .. ADDON .. "\\Emotes\\"
 
 ns.pack = {
 	["scCloudzUlt"] = ns.EMOTE_ROOT .. "scCloudzUlt.tga:28:28",
+	["scDinoDance"] = ns.EMOTE_ROOT .. "scDinoDance.tga:28:28",
 	["scFuck"] = ns.EMOTE_ROOT .. "scFuck.tga:28:28",
 	["scImIn"] = ns.EMOTE_ROOT .. "scImIn.tga:28:28",
 	["scOooo"] = ns.EMOTE_ROOT .. "scOooo.tga:28:28",
@@ -24,6 +25,7 @@ ns.pack = {
 
 ns.emoticons = {
 	["scCloudzUlt"] = "scCloudzUlt",
+	["scDinoDance"] = "scDinoDance",
 	["scFuck"] = "scFuck",
 	["scImIn"] = "scImIn",
 	["scOooo"] = "scOooo",
@@ -38,6 +40,7 @@ ns.emoticons = {
 }
 
 ns.animations = {
+	[ns.EMOTE_ROOT .. "scDinoDance.tga"] = {["nFrames"] = 64, ["frameWidth"] = 32, ["frameHeight"] = 32, ["imageWidth"] = 32, ["imageHeight"] = 2048, ["framerate"] = 14},
 	[ns.EMOTE_ROOT .. "scImIn.tga"] = {["nFrames"] = 48, ["frameWidth"] = 32, ["frameHeight"] = 32, ["imageWidth"] = 32, ["imageHeight"] = 2048, ["framerate"] = 30},
 	[ns.EMOTE_ROOT .. "scOooo.tga"] = {["nFrames"] = 64, ["frameWidth"] = 32, ["frameHeight"] = 32, ["imageWidth"] = 32, ["imageHeight"] = 2048, ["framerate"] = 18},
 	[ns.EMOTE_ROOT .. "scTheLastTrue.tga"] = {["nFrames"] = 64, ["frameWidth"] = 32, ["frameHeight"] = 32, ["imageWidth"] = 32, ["imageHeight"] = 2048, ["framerate"] = 12},
@@ -46,6 +49,7 @@ ns.animations = {
 
 ns.ordered = {
 	"scCloudzUlt",
+	"scDinoDance",
 	"scFuck",
 	"scImIn",
 	"scOooo",

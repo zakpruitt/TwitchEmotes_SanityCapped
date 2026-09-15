@@ -1,11 +1,18 @@
 {
-  "count": 12,
+  "count": 13,
   "emotes": [
     {
       "name": "scCloudzUlt",
       "file": "scCloudzUlt.tga",
       "source": "scCloudzUlt.png",
       "animated": false,
+      "aliases": []
+    },
+    {
+      "name": "scDinoDance",
+      "file": "scDinoDance.tga",
+      "source": "scDinoDance.gif",
+      "animated": true,
       "aliases": []
     },
     {

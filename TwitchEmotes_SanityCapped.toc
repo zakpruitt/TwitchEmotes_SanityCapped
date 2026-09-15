@@ -2,7 +2,7 @@
 ## Title: Twitch Emotes |cff8fd4ff+ Sanity Capped|r
 ## Notes: Custom emote pack that plugs into TwitchEmotes.|nDrop GIFs into tools/source and run build_emotes.py.
 ## Author: Sanity Capped
-## Version: 1.3
+## Version: 1.4
 ## IconTexture: Interface\AddOns\TwitchEmotes\Emotes\1337.tga
 ## Dependencies: TwitchEmotes
 
