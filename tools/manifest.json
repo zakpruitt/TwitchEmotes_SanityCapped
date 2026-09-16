@@ -1,5 +1,5 @@
 {
-  "count": 15,
+  "count": 16,
   "emotes": [
     {
       "name": "scBasedPi",
@@ -90,6 +90,13 @@
       "file": "scTurtleKillOrder.tga",
       "source": "scTurtleKillOrder.png",
       "animated": false,
+      "aliases": []
+    },
+    {
+      "name": "scVeryBased",
+      "file": "scVeryBased.tga",
+      "source": "scVeryBased.gif",
+      "animated": true,
       "aliases": []
     },
     {
