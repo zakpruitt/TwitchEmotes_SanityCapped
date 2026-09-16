@@ -1,6 +1,13 @@
 {
-  "count": 13,
+  "count": 15,
   "emotes": [
+    {
+      "name": "scBasedPi",
+      "file": "scBasedPi.tga",
+      "source": "scBasedPi.jpg",
+      "animated": false,
+      "aliases": []
+    },
     {
       "name": "scCloudzUlt",
       "file": "scCloudzUlt.tga",
@@ -27,6 +34,13 @@
       "file": "scImIn.tga",
       "source": "scImIn.gif",
       "animated": true,
+      "aliases": []
+    },
+    {
+      "name": "scMlgPi",
+      "file": "scMlgPi.tga",
+      "source": "scMlgPi.png",
+      "animated": false,
       "aliases": []
     },
     {

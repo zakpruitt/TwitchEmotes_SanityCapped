@@ -8,10 +8,12 @@ local ADDON, ns = ...
 ns.EMOTE_ROOT = "Interface\\AddOns\\" .. ADDON .. "\\Emotes\\"
 
 ns.pack = {
+	["scBasedPi"] = ns.EMOTE_ROOT .. "scBasedPi.tga:28:28",
 	["scCloudzUlt"] = ns.EMOTE_ROOT .. "scCloudzUlt.tga:28:28",
 	["scDinoDance"] = ns.EMOTE_ROOT .. "scDinoDance.tga:28:28",
 	["scFuck"] = ns.EMOTE_ROOT .. "scFuck.tga:28:28",
 	["scImIn"] = ns.EMOTE_ROOT .. "scImIn.tga:28:28",
+	["scMlgPi"] = ns.EMOTE_ROOT .. "scMlgPi.tga:28:28",
 	["scOooo"] = ns.EMOTE_ROOT .. "scOooo.tga:28:28",
 	["scPewW"] = ns.EMOTE_ROOT .. "scPewW.tga:28:28",
 	["scSpuggiesUlt"] = ns.EMOTE_ROOT .. "scSpuggiesUlt.tga:28:28",
@@ -24,10 +26,12 @@ ns.pack = {
 }
 
 ns.emoticons = {
+	["scBasedPi"] = "scBasedPi",
 	["scCloudzUlt"] = "scCloudzUlt",
 	["scDinoDance"] = "scDinoDance",
 	["scFuck"] = "scFuck",
 	["scImIn"] = "scImIn",
+	["scMlgPi"] = "scMlgPi",
 	["scOooo"] = "scOooo",
 	["scPewW"] = "scPewW",
 	["scSpuggiesUlt"] = "scSpuggiesUlt",
@@ -48,10 +52,12 @@ ns.animations = {
 }
 
 ns.ordered = {
+	"scBasedPi",
 	"scCloudzUlt",
 	"scDinoDance",
 	"scFuck",
 	"scImIn",
+	"scMlgPi",
 	"scOooo",
 	"scPewW",
 	"scSpuggiesUlt",
