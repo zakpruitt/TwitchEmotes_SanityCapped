@@ -24,6 +24,7 @@ ns.pack = {
 	["scVeryBased"] = ns.EMOTE_ROOT .. "scVeryBased.tga:28:28",
 	["scVynChatting"] = ns.EMOTE_ROOT .. "scVynChatting.tga:28:28",
 	["scWeAreGathered"] = ns.EMOTE_ROOT .. "scWeAreGathered.tga:28:28",
+	["scWhat"] = ns.EMOTE_ROOT .. "scWhat.tga:28:28",
 }
 
 ns.emoticons = {
@@ -43,6 +44,7 @@ ns.emoticons = {
 	["scVeryBased"] = "scVeryBased",
 	["scVynChatting"] = "scVynChatting",
 	["scWeAreGathered"] = "scWeAreGathered",
+	["scWhat"] = "scWhat",
 }
 
 ns.animations = {
@@ -71,4 +73,5 @@ ns.ordered = {
 	"scVeryBased",
 	"scVynChatting",
 	"scWeAreGathered",
+	"scWhat",
 }

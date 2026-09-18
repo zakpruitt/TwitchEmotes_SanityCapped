@@ -1,5 +1,5 @@
 {
-  "count": 16,
+  "count": 17,
   "emotes": [
     {
       "name": "scBasedPi",
@@ -111,6 +111,13 @@
       "file": "scWeAreGathered.tga",
       "source": "scWeAreGathered.gif",
       "animated": true,
+      "aliases": []
+    },
+    {
+      "name": "scWhat",
+      "file": "scWhat.tga",
+      "source": "scWhat.jpg",
+      "animated": false,
       "aliases": []
     }
   ]
