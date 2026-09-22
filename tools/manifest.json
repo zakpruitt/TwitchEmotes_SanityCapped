@@ -1,5 +1,5 @@
 {
-  "count": 17,
+  "count": 18,
   "emotes": [
     {
       "name": "scBasedPi",
@@ -54,6 +54,13 @@
       "name": "scPewW",
       "file": "scPewW.tga",
       "source": "scPewW.png",
+      "animated": false,
+      "aliases": []
+    },
+    {
+      "name": "scPiAddiction",
+      "file": "scPiAddiction.tga",
+      "source": "scPiAddiction.png",
       "animated": false,
       "aliases": []
     },
