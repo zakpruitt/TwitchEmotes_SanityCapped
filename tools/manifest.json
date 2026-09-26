@@ -1,5 +1,5 @@
 {
-  "count": 20,
+  "count": 21,
   "emotes": [
     {
       "name": "scBasedPi",
@@ -20,6 +20,13 @@
       "file": "scDinoDance.tga",
       "source": "scDinoDance.gif",
       "animated": true,
+      "aliases": []
+    },
+    {
+      "name": "scFalse",
+      "file": "scFalse.tga",
+      "source": "scFalse.png",
+      "animated": false,
       "aliases": []
     },
     {
