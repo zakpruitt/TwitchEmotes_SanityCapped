@@ -1,5 +1,5 @@
 {
-  "count": 19,
+  "count": 20,
   "emotes": [
     {
       "name": "scBasedPi",
@@ -26,6 +26,13 @@
       "name": "scFuck",
       "file": "scFuck.tga",
       "source": "scFuck.png",
+      "animated": false,
+      "aliases": []
+    },
+    {
+      "name": "scGoldenABEar",
+      "file": "scGoldenABEar.tga",
+      "source": "scGoldenABEar.png",
       "animated": false,
       "aliases": []
     },
