@@ -1,0 +1,10 @@
+{
+  "_comment": "Per-emote overrides. See emotes.json.example and the README.",
+
+  "scTrue": {
+    "name": "true"
+  },
+  "scFalse": {
+    "name": "false"
+  }
+}

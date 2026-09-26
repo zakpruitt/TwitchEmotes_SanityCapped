@@ -23,8 +23,8 @@
       "aliases": []
     },
     {
-      "name": "scFalse",
-      "file": "scFalse.tga",
+      "name": "false",
+      "file": "false.tga",
       "source": "scFalse.png",
       "animated": false,
       "aliases": []
@@ -107,8 +107,8 @@
       "aliases": []
     },
     {
-      "name": "scTrue",
-      "file": "scTrue.tga",
+      "name": "true",
+      "file": "true.tga",
       "source": "scTrue.png",
       "animated": false,
       "aliases": []
