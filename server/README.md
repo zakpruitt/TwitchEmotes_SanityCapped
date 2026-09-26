@@ -33,14 +33,15 @@ mvn test
 
 Health check: `/actuator/health`
 
-## Deployment (Fly.io)
+## Deployment
+
+Runs on Oracle Cloud from the `Dockerfile`:
 
 ```bash
 cd server
-fly launch --no-deploy
-fly volumes create emotes_data --size 1
-fly secrets set ADMIN_PASSCODE=... GITHUB_TOKEN=...
-fly deploy
+docker build -t sanity-capped-emotes .
+docker run -d -p 8080:8080 -v emotes_data:/data \
+  -e ADMIN_PASSCODE=... -e GITHUB_TOKEN=... sanity-capped-emotes
 ```
 
 The volume is a cache. Approved emotes live in the repo, so a fresh volume repopulates on boot.

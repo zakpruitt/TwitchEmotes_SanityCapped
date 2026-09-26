@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 final class ClientIp {
 
     /**
-     * Behind Fly or Render the caller's address arrives forwarded.
+     * Behind a reverse proxy the caller's address arrives forwarded.
      */
     static String of(HttpServletRequest request) {
         String forwarded = request.getHeader("X-Forwarded-For");
