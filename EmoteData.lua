@@ -12,6 +12,7 @@ ns.pack = {
 	["scCloudzUlt"] = ns.EMOTE_ROOT .. "scCloudzUlt.tga:28:28",
 	["scDinoDance"] = ns.EMOTE_ROOT .. "scDinoDance.tga:28:28",
 	["false"] = ns.EMOTE_ROOT .. "false.tga:28:28",
+	["scFreddyTrueBear"] = ns.EMOTE_ROOT .. "scFreddyTrueBear.tga:28:28",
 	["scFuck"] = ns.EMOTE_ROOT .. "scFuck.tga:28:28",
 	["scGoldenABEar"] = ns.EMOTE_ROOT .. "scGoldenABEar.tga:28:28",
 	["scImIn"] = ns.EMOTE_ROOT .. "scImIn.tga:28:28",
@@ -36,6 +37,7 @@ ns.emoticons = {
 	["scCloudzUlt"] = "scCloudzUlt",
 	["scDinoDance"] = "scDinoDance",
 	["false"] = "false",
+	["scFreddyTrueBear"] = "scFreddyTrueBear",
 	["scFuck"] = "scFuck",
 	["scGoldenABEar"] = "scGoldenABEar",
 	["scImIn"] = "scImIn",
@@ -57,6 +59,7 @@ ns.emoticons = {
 
 ns.animations = {
 	[ns.EMOTE_ROOT .. "scDinoDance.tga"] = {["nFrames"] = 64, ["frameWidth"] = 32, ["frameHeight"] = 32, ["imageWidth"] = 32, ["imageHeight"] = 2048, ["framerate"] = 14},
+	[ns.EMOTE_ROOT .. "scFreddyTrueBear.tga"] = {["nFrames"] = 26, ["frameWidth"] = 32, ["frameHeight"] = 32, ["imageWidth"] = 32, ["imageHeight"] = 1024, ["framerate"] = 10},
 	[ns.EMOTE_ROOT .. "scImIn.tga"] = {["nFrames"] = 48, ["frameWidth"] = 32, ["frameHeight"] = 32, ["imageWidth"] = 32, ["imageHeight"] = 2048, ["framerate"] = 30},
 	[ns.EMOTE_ROOT .. "scOooo.tga"] = {["nFrames"] = 64, ["frameWidth"] = 32, ["frameHeight"] = 32, ["imageWidth"] = 32, ["imageHeight"] = 2048, ["framerate"] = 18},
 	[ns.EMOTE_ROOT .. "scRdjHuh.tga"] = {["nFrames"] = 10, ["frameWidth"] = 32, ["frameHeight"] = 32, ["imageWidth"] = 32, ["imageHeight"] = 512, ["framerate"] = 10},
@@ -70,6 +73,7 @@ ns.ordered = {
 	"scCloudzUlt",
 	"scDinoDance",
 	"false",
+	"scFreddyTrueBear",
 	"scFuck",
 	"scGoldenABEar",
 	"scImIn",
