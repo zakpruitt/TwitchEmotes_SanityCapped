@@ -84,3 +84,13 @@ server/                        the upload and approval site
 ```
 
 Only the `.toc`, Lua files and `Emotes/` ship in the release zip.
+
+<!-- portfolio
+name: Sanity Capped Emotes
+live: none
+year: 2026
+order: 4
+tags: Lua, Java, GitHub Actions
+summary: My guild's World of Warcraft emote pack. Members upload emotes through a web app, and GitHub
+  Actions builds and publishes each new release.
+-->
