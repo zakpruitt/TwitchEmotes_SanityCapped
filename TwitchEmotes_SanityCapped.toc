@@ -1,4 +1,4 @@
-## Interface: 120005
+## Interface: 120105, 120100, 120005, 16001
 ## Title: Twitch Emotes |cff8fd4ff+ Sanity Capped|r
 ## Notes: Custom emote pack that plugs into TwitchEmotes.|nDrop GIFs into tools/source and run build_emotes.py.
 ## Author: Sanity Capped

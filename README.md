@@ -2,9 +2,11 @@
 
 A custom emote pack for the TwitchEmotes addon. It adds the guild's emotes without modifying TwitchEmotes, so both update independently.
 
+Works on retail and WoW: Forever. Both install the same release, so the emotes are always identical on the two.
+
 ## Installation
 
-1. Install TwitchEmotes.
+1. Install TwitchEmotes for the game you play (retail or Forever).
 2. In WoWUp, go to **Get Addons → Install from URL** and paste:
    ```
    https://github.com/zakpruitt/TwitchEmotes_SanityCapped
