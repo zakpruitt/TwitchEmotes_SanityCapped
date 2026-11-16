@@ -25,11 +25,23 @@ class PageRenderingTest extends WebTestBase {
     }
 
     @Test
-    void uploadPageStatesTheSizeLimit() throws Exception {
+    void soundsPageRendersWithALinkInTheNav() throws Exception {
+        mvc.perform(get("/sounds"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("sounds"))
+                .andExpect(model().attributeExists("sounds"))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("sound pack")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("href=\"/sounds\"")));
+    }
+
+    @Test
+    void uploadPageStatesTheSizeAndLengthLimits() throws Exception {
         mvc.perform(get("/upload"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("upload"))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("2</span> MB")));
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("2</span> MB")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("20</span> seconds")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("data-max-sound-seconds=\"20\"")));
     }
 
     @Test

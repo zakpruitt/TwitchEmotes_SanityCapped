@@ -3,10 +3,11 @@ package com.zakpruitt.sanitycapped.naming;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 /**
- * Ported from sanitize()/apply_prefix() in tools/build_emotes.py, and mirrored
+ * Ported from sanitize()/apply_prefix()/sound_name() in tools/naming.py, and mirrored
  * again in static/js/naming.js. All three must agree or the site promises a
  * trigger word the addon build will not produce; NamingTest pins this one.
  */
@@ -27,6 +28,11 @@ public final class Naming {
             Pattern.compile("[-_](?:\\d{1,4}px|\\d{1,4}x|\\d{1,4})$", Pattern.CASE_INSENSITIVE);
 
     /**
+     * A sound's name ends up in a slash command, so only letters and digits survive.
+     */
+    private static final Pattern NOT_SLASH_SAFE = Pattern.compile("[^A-Za-z0-9]+");
+
+    /**
      * peepoHmm-128.png -> peepoHmm-128.
      */
     public static String stem(String fileName) {
@@ -35,6 +41,20 @@ public final class Naming {
 
     public static String triggerWord(String stem) {
         return applyPrefix(sanitize(stem));
+    }
+
+    /**
+     * vine boom! -> scVineboom. Shown with its capitals, typed as /scvineboom.
+     */
+    public static String soundName(String stem) {
+        return applyPrefix(NOT_SLASH_SAFE.matcher(sanitize(stem)).replaceAll(""));
+    }
+
+    /**
+     * scVineboom -> /scvineboom, which is also what is sent to other players.
+     */
+    public static String command(String soundName) {
+        return "/" + soundName.toLowerCase(Locale.ROOT);
     }
 
     public static String sanitize(String stem) {

@@ -24,6 +24,7 @@ app:
   github-repo: ${GITHUB_REPO:zakpruitt/TwitchEmotes_SanityCapped}
   github-token: ${GITHUB_TOKEN:}
   max-upload-bytes: 2097152
+  max-sound-seconds: 20
   similar-threshold: 6
   uploads-per-hour: 10
 

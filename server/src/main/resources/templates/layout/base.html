@@ -20,10 +20,11 @@
                 <span class="bottom">Capped</span>
             </span>
             <span class="divider"></span>
-            <span class="product">Emote Pack</span>
+            <span class="product">Emotes &amp; Sounds</span>
         </a>
         <nav>
-            <a th:classappend="${active == 'browse'} ? 'active'" th:href="@{/}">Browse</a>
+            <a th:classappend="${active == 'browse'} ? 'active'" th:href="@{/}">Emotes</a>
+            <a th:classappend="${active == 'sounds'} ? 'active'" th:href="@{/sounds}">Sounds</a>
             <a th:classappend="${active == 'upload'} ? 'active'" th:href="@{/upload}">Upload</a>
             <a th:classappend="${active == 'admin'} ? 'active'" th:href="@{/admin}">Admin</a>
         </nav>
@@ -34,7 +35,7 @@
 
 <footer class="site">
     <div class="bar">
-        <span>Type an emote's name in chat. Everyone with the addon sees it.</span>
+        <span>Type an emote's name in chat or play a sound from Soundboard. Everyone with the pack sees and hears it.</span>
         <a rel="noopener" target="_blank" th:href="${repoUrl}">GitHub</a>
     </div>
 </footer>

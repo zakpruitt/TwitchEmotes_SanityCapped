@@ -59,7 +59,7 @@ public class PackPublisher {
                         "That image isn't in the repo any more, so there is nothing to delete."));
     }
 
-    private static String rootMessage(Throwable e) {
+    public static String rootMessage(Throwable e) {
         Throwable cause = e;
         while (cause.getCause() != null) {
             cause = cause.getCause();

@@ -4,9 +4,19 @@ const gate = $("#gate");
 const panel = $("#panel");
 const queue = $("#queue");
 const approved = $("#approved");
+const approvedSounds = $("#approved-sounds");
 const passcodeField = $("#passcode");
 
 let passcode = remembered.get("adminPasscode");
+
+/** Where each kind's admin endpoints live. */
+const ADMIN_PATH = {emote: "/api/admin", sound: "/api/admin/sounds"};
+
+/** Uploader names are free text, so nothing from the server goes in unescaped. */
+function esc(value) {
+    return String(value ?? "").replace(/[&<>"']/g, (c) => (
+        {"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+}
 
 gate.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -18,7 +28,7 @@ $("#resync").addEventListener("click", async (event) => {
     event.target.disabled = true;
     try {
         const {added} = await postJson("/api/admin/resync", {}, passcode);
-        show($("#gate-message"), added ? `Adopted ${added} emote(s) from the repo.` : "Already up to date.");
+        show($("#gate-message"), added ? `Adopted ${added} file(s) from the repo.` : "Already up to date.");
         await load();
     } catch (error) {
         alert(error.message);
@@ -43,57 +53,91 @@ async function unlock({quiet}) {
 }
 
 async function load() {
-    const [{pending}, {emotes}] = await Promise.all([
+    const [emoteQueue, {emotes}, soundQueue, {sounds}] = await Promise.all([
         api("/api/admin/pending", {passcode}),
         api("/api/emotes"),
+        api("/api/admin/sounds/pending", {passcode}),
+        api("/api/sounds"),
     ]);
 
-    $("#pending-count").textContent = `${pending.length} waiting`;
-    queue.innerHTML = pending.length
-        ? pending.map(pendingCard).join("")
+    const waiting = emoteQueue.pending.length + soundQueue.pending.length;
+    $("#pending-count").textContent = `${waiting} waiting`;
+    queue.innerHTML = waiting
+        ? emoteQueue.pending.map(pendingEmote).join("") + soundQueue.pending.map(pendingSound).join("")
         : `<p class="empty">Nothing waiting. Quiet guild.</p>`;
-    approved.innerHTML = emotes.map(approvedCard).join("");
+    approved.innerHTML = emotes.map(approvedEmote).join("");
+    approvedSounds.innerHTML = sounds.length
+        ? sounds.map(approvedSound).join("")
+        : `<p class="empty">No sounds yet.</p>`;
 }
 
-function pendingCard(emote) {
+function decisionButtons() {
     return `
-    <div class="card pending" data-id="${emote.id}">
-      <img src="${emote.url}" alt="${emote.name}">
-      <div class="meta">
-        <div class="name">${emote.name}</div>
-        <div class="by">by ${emote.uploader} · ${emote.age}</div>
-        ${emote.note ? `<span class="tag warn">${emote.note}</span>` : ""}
-        <p class="chatline"><span>[Guild]</span><img src="${emote.url}" alt=""><span>${emote.name}</span></p>
-      </div>
       <div class="actions">
         <input type="text" data-rename placeholder="rename (optional)">
         <button class="ok" data-approve>Approve</button>
         <button class="danger" data-reject>Reject</button>
+      </div>`;
+}
+
+function pendingEmote(emote) {
+    return `
+    <div class="card pending" data-id="${esc(emote.id)}" data-kind="emote">
+      <img src="${esc(emote.url)}" alt="${esc(emote.name)}">
+      <div class="meta">
+        <div class="name">${esc(emote.name)}</div>
+        <div class="by">emote · by ${esc(emote.uploader)} · ${esc(emote.age)}</div>
+        ${emote.note ? `<span class="tag warn">${esc(emote.note)}</span>` : ""}
+        <p class="chatline"><span>[Guild]</span><img src="${esc(emote.url)}" alt=""><span>${esc(emote.name)}</span></p>
       </div>
+      ${decisionButtons()}
     </div>`;
 }
 
-function approvedCard(emote) {
+function pendingSound(sound) {
+    return `
+    <div class="card pending" data-id="${esc(sound.id)}" data-kind="sound">
+      <div class="meta">
+        <div class="name">${esc(sound.name)} <span class="cmd">${esc(sound.command)}</span></div>
+        <div class="by">sound · by ${esc(sound.uploader)} · ${esc(sound.seconds)}s · ${esc(sound.age)}</div>
+        <audio controls preload="none" src="${esc(sound.url)}"></audio>
+      </div>
+      ${decisionButtons()}
+    </div>`;
+}
+
+function approvedEmote(emote) {
     return `
     <div class="emote">
-      <img src="${emote.url}" alt="${emote.name}">
-      <span class="name">${emote.name}</span>
-      <span class="by">by ${emote.uploader}</span>
-      <button class="danger small" data-remove="${emote.id}" data-name="${emote.name}">Remove</button>
+      <img src="${esc(emote.url)}" alt="${esc(emote.name)}">
+      <span class="name">${esc(emote.name)}</span>
+      <span class="by">by ${esc(emote.uploader)}</span>
+      <button class="danger small" data-remove="${esc(emote.id)}" data-kind="emote" data-name="${esc(emote.name)}">Remove</button>
+    </div>`;
+}
+
+function approvedSound(sound) {
+    return `
+    <div class="sound">
+      <span class="name">${esc(sound.name)}</span>
+      <span class="cmd">${esc(sound.command)}</span>
+      <span class="by">by ${esc(sound.uploader)} · ${esc(sound.seconds)}s</span>
+      <audio controls preload="none" src="${esc(sound.url)}"></audio>
+      <button class="danger small" data-remove="${esc(sound.id)}" data-kind="sound" data-name="${esc(sound.name)}">Remove</button>
     </div>`;
 }
 
 queue.addEventListener("click", async (event) => {
     const card = event.target.closest(".pending");
     if (!card) return;
-    const id = card.dataset.id;
+    const path = `${ADMIN_PATH[card.dataset.kind]}/${card.dataset.id}`;
     const rename = $("[data-rename]", card).value.trim();
 
     if (event.target.matches("[data-approve]")) {
         event.target.disabled = true;
         event.target.textContent = "Committing…";
         try {
-            const decided = await postJson(`/api/admin/${id}/approve`, {name: rename}, passcode);
+            const decided = await postJson(`${path}/approve`, {name: rename}, passcode);
             card.replaceWith(note(`${decided.name} approved — the release is building.`));
             await load();
         } catch (error) {
@@ -106,7 +150,7 @@ queue.addEventListener("click", async (event) => {
     if (event.target.matches("[data-reject]")) {
         const reason = prompt("Reason (optional, just for your own records):") ?? "";
         try {
-            await postJson(`/api/admin/${id}/reject`, {reason}, passcode);
+            await postJson(`${path}/reject`, {reason}, passcode);
             await load();
         } catch (error) {
             alert(error.message);
@@ -114,13 +158,13 @@ queue.addEventListener("click", async (event) => {
     }
 });
 
-approved.addEventListener("click", async (event) => {
+panel.addEventListener("click", async (event) => {
     const button = event.target.closest("[data-remove]");
     if (!button) return;
     if (!confirm(`Remove ${button.dataset.name} from the pack? This publishes an update without it.`)) return;
     button.disabled = true;
     try {
-        await api(`/api/admin/${button.dataset.remove}`, {method: "DELETE", passcode});
+        await api(`${ADMIN_PATH[button.dataset.kind]}/${button.dataset.remove}`, {method: "DELETE", passcode});
         await load();
     } catch (error) {
         button.disabled = false;

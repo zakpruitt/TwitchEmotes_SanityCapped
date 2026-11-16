@@ -1,5 +1,5 @@
-// Mirrors Naming.java and sanitize()/apply_prefix() in tools/build_emotes.py,
-// so the name shown while typing is the one the build will produce.
+// Mirrors Naming.java and tools/naming.py, so the name shown while typing is
+// the one the build will produce.
 const PREFIX = "sc";
 
 // TwitchEmotes splits chat on these, so a name containing one can never match.
@@ -33,4 +33,13 @@ export function applyPrefix(name) {
 
 export function triggerWord(stem) {
     return applyPrefix(sanitize(stem));
+}
+
+// A sound's name ends up in a slash command, so only letters and digits survive.
+export function soundName(stem) {
+    return applyPrefix(sanitize(stem).replace(/[^A-Za-z0-9]+/g, ""));
+}
+
+export function command(name) {
+    return "/" + name.toLowerCase();
 }

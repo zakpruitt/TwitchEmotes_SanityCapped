@@ -8,6 +8,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
 import java.util.Base64;
@@ -16,13 +17,15 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * The only outbound calls. Commits into the addon repo's tools/source/, which
- * is what triggers a release build.
+ * The only outbound calls. Commits emote images into the addon repo's
+ * tools/source/ and MP3s into the sound pack's Sounds/, either of which
+ * triggers a release build.
  */
 @Component
 public class GitHubClient {
 
     private static final String SOURCE_PATH = "/contents/tools/source";
+    private static final String SOUND_PATH = "/contents/Soundboard_SanityCapped/Sounds";
 
     private final AppProperties props;
     private final RestClient api;
@@ -35,16 +38,11 @@ public class GitHubClient {
     }
 
     public List<SourceFile> listSource() {
-        List<ContentEntry> entries = api.get()
-                .uri(sourcePath())
-                .retrieve()
-                .body(new ParameterizedTypeReference<List<ContentEntry>>() {
-                });
+        return list(sourcePath());
+    }
 
-        return entries == null ? List.of() : entries.stream()
-                .filter(entry -> "file".equals(entry.type()))
-                .map(entry -> new SourceFile(entry.name(), entry.sha(), entry.downloadUrl()))
-                .toList();
+    public List<SourceFile> listSounds() {
+        return list(soundPath());
     }
 
     public byte[] download(String url) {
@@ -53,36 +51,28 @@ public class GitHubClient {
 
     /** @return the new blob sha, which a later delete has to quote */
     public String putSource(String fileName, byte[] content, String message) {
-        CommitResult result = api.put()
-                .uri(sourcePath() + "/{file}", fileName)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(Map.of("message", message,
-                        "content", Base64.getEncoder().encodeToString(content)))
-                .retrieve()
-                .body(CommitResult.class);
+        return put(sourcePath(), fileName, content, message);
+    }
 
-        return result.content().sha();
+    /** @return the new blob sha, which a later delete has to quote */
+    public String putSound(String fileName, byte[] content, String message) {
+        return put(soundPath(), fileName, content, message);
     }
 
     public void deleteSource(String fileName, String sha, String message) {
-        api.method(HttpMethod.DELETE)
-                .uri(sourcePath() + "/{file}", fileName)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(Map.of("message", message, "sha", sha))
-                .retrieve()
-                .toBodilessEntity();
+        delete(sourcePath(), fileName, sha, message);
+    }
+
+    public void deleteSound(String fileName, String sha, String message) {
+        delete(soundPath(), fileName, sha, message);
     }
 
     public Optional<String> shaFor(String fileName) {
-        try {
-            ContentEntry entry = api.get()
-                    .uri(sourcePath() + "/{file}", fileName)
-                    .retrieve()
-                    .body(ContentEntry.class);
-            return Optional.ofNullable(entry).map(ContentEntry::sha);
-        } catch (RuntimeException e) {
-            return Optional.empty();
-        }
+        return sha(sourcePath(), fileName);
+    }
+
+    public Optional<String> soundShaFor(String fileName) {
+        return sha(soundPath(), fileName);
     }
 
     public Optional<Release> latestRelease() {
@@ -93,6 +83,58 @@ public class GitHubClient {
                     .body(ReleaseEntry.class);
             return Optional.ofNullable(entry)
                     .map(e -> new Release(e.tagName(), e.htmlUrl(), e.publishedAt()));
+        } catch (RuntimeException e) {
+            return Optional.empty();
+        }
+    }
+
+    /** Empty when the folder is not in the repo yet. */
+    private List<SourceFile> list(String folder) {
+        List<ContentEntry> entries;
+        try {
+            entries = api.get()
+                    .uri(folder)
+                    .retrieve()
+                    .body(new ParameterizedTypeReference<List<ContentEntry>>() {
+                    });
+        } catch (HttpClientErrorException.NotFound e) {
+            return List.of();
+        }
+
+        return entries == null ? List.of() : entries.stream()
+                .filter(entry -> "file".equals(entry.type()))
+                .map(entry -> new SourceFile(entry.name(), entry.sha(), entry.downloadUrl()))
+                .toList();
+    }
+
+    private String put(String folder, String fileName, byte[] content, String message) {
+        CommitResult result = api.put()
+                .uri(folder + "/{file}", fileName)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Map.of("message", message,
+                        "content", Base64.getEncoder().encodeToString(content)))
+                .retrieve()
+                .body(CommitResult.class);
+
+        return result.content().sha();
+    }
+
+    private void delete(String folder, String fileName, String sha, String message) {
+        api.method(HttpMethod.DELETE)
+                .uri(folder + "/{file}", fileName)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Map.of("message", message, "sha", sha))
+                .retrieve()
+                .toBodilessEntity();
+    }
+
+    private Optional<String> sha(String folder, String fileName) {
+        try {
+            ContentEntry entry = api.get()
+                    .uri(folder + "/{file}", fileName)
+                    .retrieve()
+                    .body(ContentEntry.class);
+            return Optional.ofNullable(entry).map(ContentEntry::sha);
         } catch (RuntimeException e) {
             return Optional.empty();
         }
@@ -112,6 +154,10 @@ public class GitHubClient {
 
     private String sourcePath() {
         return repoPath(SOURCE_PATH);
+    }
+
+    private String soundPath() {
+        return repoPath(SOUND_PATH);
     }
 
     /** owner/name goes in the literal path: a template variable would encode the slash. */

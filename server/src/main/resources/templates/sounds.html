@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en" th:replace="~{layout/base :: page(~{::title}, 'sounds', ~{::main}, ~{::scripts})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Sanity Capped Sound Pack</title>
+</head>
+<body>
+
+<main>
+    <h1>Sanity Capped's sound pack</h1>
+    <p class="sub">
+        Everything below is live in the addon. Press play to hear one, or click its name to copy the command.
+        Playing one in game plays it for everyone in your group or guild who has the pack.
+    </p>
+
+    <div class="card install">
+        <div>
+            <strong>Install or update</strong><br>
+            <span class="muted">Needs the Soundboard addon. WoWUp &rarr; Get Addons &rarr; Install from URL</span>
+        </div>
+        <code id="repo-url" th:text="${repoUrl}">https://github.com/…</code>
+        <button class="ghost" data-copy="#repo-url">Copy URL</button>
+        <a class="tag" rel="noopener" target="_blank" th:href="${release.url()}" th:if="${release}"
+           th:text="'latest ' + ${release.tag()}">latest v1.0</a>
+    </div>
+
+    <div class="toolbar">
+        <input aria-label="Search sounds" autocomplete="off" id="search" placeholder="Search sounds…"
+               type="search">
+        <span class="tag" id="count" th:text="${#lists.size(sounds)} + ' sounds'">0 sounds</span>
+    </div>
+
+    <div class="grid" id="grid">
+        <div class="sound" th:data-command="${sound.command()}"
+             th:data-search="${sound.name() + ' ' + sound.uploader()}" th:each="sound : ${sounds}">
+            <button class="play" th:aria-label="'Play ' + ${sound.name()}" th:data-src="${sound.url()}"
+                    type="button">&#9654;</button>
+            <button class="copy" th:title="'Click to copy ' + ${sound.command()}" type="button">
+                <span class="name" th:text="${sound.name()}">scSound</span>
+                <span class="cmd" th:text="${sound.command()}">/scsound</span>
+            </button>
+            <span class="by"
+                  th:text="'by ' + ${sound.uploader()} + ' · ' + ${sound.seconds()} + 's · ' + ${sound.age()}">by someone</span>
+        </div>
+    </div>
+
+    <p class="empty" th:if="${#lists.isEmpty(sounds)}">
+        No sounds yet. Be the first to <a th:href="@{/upload}">upload one</a>.
+    </p>
+</main>
+
+<th:block th:fragment="scripts">
+    <script th:src="@{/js/sounds.js}" type="module"></script>
+</th:block>
+
+</body>
+</html>

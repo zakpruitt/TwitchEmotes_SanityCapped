@@ -15,7 +15,7 @@ public record EmoteResponse(String id, String name, String url, String uploader,
                 age(emote.getCreatedAt()));
     }
 
-    private static String age(Instant when) {
+    static String age(Instant when) {
         Duration ago = Duration.between(when, Instant.now());
         if (ago.toMinutes() < 1) {
             return "just now";

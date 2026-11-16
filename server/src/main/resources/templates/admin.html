@@ -2,13 +2,13 @@
 <html lang="en" th:replace="~{layout/base :: page(~{::title}, 'admin', ~{::main}, ~{::scripts})}"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Emote queue</title>
+    <title>Approval queue</title>
 </head>
 <body>
 
 <main>
     <h1>Approval queue</h1>
-    <p class="sub">Approving commits the image to the repo, which builds and publishes a release on its own.</p>
+    <p class="sub">Approving commits the image or MP3 to the repo, which builds and publishes a release on its own.</p>
 
     <p class="msg warn" th:unless="${publishingEnabled}">
         No GitHub token is configured, so approving has nowhere to commit. Set GITHUB_TOKEN and restart.
@@ -34,9 +34,13 @@
 
         <div id="queue"></div>
 
-        <h2>In the pack</h2>
+        <h2>Emotes in the pack</h2>
         <p class="sub">Removing one commits a delete and rebuilds the addon without it.</p>
         <div class="grid" id="approved"></div>
+
+        <h2>Sounds in the pack</h2>
+        <p class="sub">Same here: removing one publishes an update without it.</p>
+        <div class="grid" id="approved-sounds"></div>
     </section>
 </main>
 

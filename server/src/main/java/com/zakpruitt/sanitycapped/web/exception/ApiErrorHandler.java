@@ -41,7 +41,7 @@ class ApiErrorHandler {
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     ResponseEntity<ErrorResponse> handle(MaxUploadSizeExceededException e) {
-        return ResponseEntity.badRequest().body(new ErrorResponse("That image is too big."));
+        return ResponseEntity.badRequest().body(new ErrorResponse("That file is too big."));
     }
 
     @ExceptionHandler(Exception.class)

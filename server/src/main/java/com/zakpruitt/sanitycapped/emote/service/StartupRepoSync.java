@@ -1,5 +1,6 @@
 package com.zakpruitt.sanitycapped.emote.service;
 
+import com.zakpruitt.sanitycapped.sound.service.SoundRepoSyncService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
@@ -16,11 +17,13 @@ import org.springframework.stereotype.Component;
 class StartupRepoSync implements ApplicationRunner {
 
     private final RepoSyncService repoSync;
+    private final SoundRepoSyncService soundSync;
 
     @Override
     public void run(ApplicationArguments args) {
         try {
             repoSync.sync();
+            soundSync.sync();
         } catch (RuntimeException e) {
             // The queue works offline, so this must never stop the app.
             log.warn("Could not sync from the repo at startup: {}", e.getMessage());

@@ -2,28 +2,31 @@
 <html lang="en" th:replace="~{layout/base :: page(~{::title}, 'upload', ~{::main}, ~{::scripts})}"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Upload an emote</title>
+    <title>Upload an emote or a sound</title>
 </head>
 <body>
 
 <main class="narrow">
-    <h1>Upload an emote</h1>
+    <h1>Upload an emote or a sound</h1>
     <p class="sub">
-        GIF, PNG, WebP or JPEG, up to <span th:text="${maxMegabytes}">2</span> MB.
+        Emotes: GIF, PNG, WebP or JPEG. Sounds: MP3, up to
+        <span th:text="${maxSoundSeconds}">20</span> seconds.
+        Either way, up to <span th:text="${maxMegabytes}">2</span> MB.
     </p>
 
     <p class="msg ok" id="sent" role="status"></p>
 
-    <form autocomplete="off" class="card" id="upload-form">
+    <form autocomplete="off" class="card" id="upload-form" th:data-max-sound-seconds="${maxSoundSeconds}">
         <label class="drop" for="file" id="drop">
-            <span id="drop-text">Drop an image here, or click to pick one</span>
+            <span id="drop-text">Drop an image or an MP3 here, or click to pick one</span>
             <img alt="" hidden id="preview">
         </label>
-        <input accept="image/gif,image/png,image/webp,image/jpeg" hidden id="file" name="file"
+        <input accept="image/gif,image/png,image/webp,image/jpeg,audio/mpeg,.mp3" hidden id="file" name="file"
                type="file">
+        <audio controls hidden id="listen"></audio>
 
         <label class="field">
-            <span>Emote name</span>
+            <span id="name-label">Name</span>
             <input id="name" name="name" placeholder="peepoHmm" type="text">
         </label>
         <p class="hint" id="trigger"></p>

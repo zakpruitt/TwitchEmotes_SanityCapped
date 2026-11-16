@@ -3,6 +3,7 @@ package com.zakpruitt.sanitycapped.web.api;
 import com.zakpruitt.sanitycapped.emote.service.EmoteQueryService;
 import com.zakpruitt.sanitycapped.emote.service.EmoteReviewService;
 import com.zakpruitt.sanitycapped.emote.service.RepoSyncService;
+import com.zakpruitt.sanitycapped.sound.service.SoundRepoSyncService;
 import com.zakpruitt.sanitycapped.web.dto.request.ApproveRequest;
 import com.zakpruitt.sanitycapped.web.dto.request.RejectRequest;
 import com.zakpruitt.sanitycapped.web.dto.response.DecisionResponse;
@@ -27,6 +28,7 @@ class AdminApiController {
     private final EmoteQueryService queries;
     private final EmoteReviewService review;
     private final RepoSyncService repoSync;
+    private final SoundRepoSyncService soundSync;
     private final Passcodes passcodes;
 
     @GetMapping("/pending")
@@ -64,6 +66,6 @@ class AdminApiController {
     @PostMapping("/resync")
     SyncResponse resync(HttpServletRequest http) {
         passcodes.requireAdmin(http);
-        return new SyncResponse(repoSync.sync());
+        return new SyncResponse(repoSync.sync() + soundSync.sync());
     }
 }

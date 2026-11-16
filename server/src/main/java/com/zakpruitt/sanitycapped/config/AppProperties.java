@@ -16,11 +16,16 @@ public record AppProperties(
         @NotBlank String githubRepo,
         String githubToken,
         @Positive long maxUploadBytes,
+        @Positive int maxSoundSeconds,
         @Positive int similarThreshold,
         @Positive int uploadsPerHour) {
 
     public Path imageDir() {
         return dataDir.resolve("images");
+    }
+
+    public Path soundDir() {
+        return dataDir.resolve("sounds");
     }
 
     public boolean canPublish() {
