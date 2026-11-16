@@ -1,6 +1,7 @@
 name: Build and release
 
-# Approving an emote on the website commits an image into tools/source/, which
+# Approving an emote on the website commits an image into tools/source/, and
+# approving a sound commits an MP3 into Soundboard_SanityCapped/Sounds/. Either
 # lands here. Rapid approvals collapse into one release via the concurrency group.
 on:
   push:
@@ -8,6 +9,7 @@ on:
     paths:
       - 'tools/source/**'
       - 'tools/emotes.json'
+      - 'Soundboard_SanityCapped/Sounds/**'
   workflow_dispatch:
 
 concurrency:
@@ -34,11 +36,15 @@ jobs:
       - name: Build emote textures
         run: python tools/build_emotes.py
 
+      - name: Build sound list
+        run: python tools/build_sounds.py
+
       - name: Stamp version
         id: ver
         run: |
           VERSION="1.${{ github.run_number }}"
-          sed -i -E "s/^## Version:.*/## Version: ${VERSION}/" TwitchEmotes_SanityCapped.toc
+          sed -i -E "s/^## Version:.*/## Version: ${VERSION}/" \
+            TwitchEmotes_SanityCapped.toc Soundboard_SanityCapped/Soundboard_SanityCapped.toc
           # Every interface on the .toc line: retail ones plus 16xxx for WoW: Forever
           INTERFACES=$(sed -nE 's/^## Interface:[[:space:]]*//p' TwitchEmotes_SanityCapped.toc | head -1 | tr ',' ' ' | xargs)
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
@@ -48,7 +54,8 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add Emotes EmoteData.lua tools/manifest.json TwitchEmotes_SanityCapped.toc
+          git add Emotes EmoteData.lua tools/manifest.json TwitchEmotes_SanityCapped.toc \
+            Soundboard_SanityCapped tools/sound_manifest.json
           if git diff --cached --quiet; then
             echo "Nothing regenerated."
           else
@@ -64,7 +71,10 @@ jobs:
           # Copy only what WoW loads; the site and build tooling stay out of the zip.
           rm -rf dist && mkdir -p dist/TwitchEmotes_SanityCapped
           cp -r TwitchEmotes_SanityCapped.toc *.lua Emotes dist/TwitchEmotes_SanityCapped/
-          (cd dist && zip -qr "../${ZIP}" TwitchEmotes_SanityCapped)
+          # The sound pack rides in the same zip as a second addon folder. Each
+          # folder does nothing unless its base addon is installed.
+          cp -r Soundboard_SanityCapped dist/
+          (cd dist && zip -qr "../${ZIP}" TwitchEmotes_SanityCapped Soundboard_SanityCapped)
           # release.json is what WoWUp reads to match the asset to a game. The one zip is
           # listed for retail (mainline) and WoW: Forever (16xxx interfaces), so both
           # clients always get the same emotes.
@@ -87,6 +97,14 @@ jobs:
           import json
           for e in json.load(open("tools/manifest.json"))["emotes"]:
               print(f"- `{e['name']}`" + (" (animated)" if e["animated"] else ""))
+          PY
+            echo
+            echo "Sounds in this build (\`$(python -c "import json;print(json.load(open('tools/sound_manifest.json'))['count'])")\` total, played through the Soundboard addon):"
+            echo
+            python - <<'PY'
+          import json
+          for s in json.load(open("tools/sound_manifest.json"))["sounds"]:
+              print(f"- `{s['name']}` (`{s['command']}`, {s['seconds']}s)")
           PY
             echo
             echo "Install or update with WoWUp: **Get Addons -> Install from URL** -> \`${{ github.server_url }}/${{ github.repository }}\`"
