@@ -16,12 +16,13 @@ try:
 except ImportError:
     sys.exit("Pillow is not installed. Run:  py -3.13 -m pip install pillow")
 
+from naming import apply_prefix, sanitize
+
 FRAME = 32
 MAX_FRAMES = 2048 // FRAME
 MAX_FPS = 30
 DEFAULT_FPS = 15
 DISPLAY = "28:28"
-PREFIX = "sc"
 
 SOURCE_EXT = {".gif", ".png", ".webp", ".apng", ".jpg", ".jpeg", ".bmp"}
 
@@ -139,31 +140,6 @@ def sheet(frames):
 
 
 # --- naming -----------------------------------------------------------------
-
-# Emoticons_InsertEmoticons splits chat on these, so a name containing one can
-# never match in chat (it still shows in autocomplete, which is the confusing bit).
-CHAT_DELIMITERS = re.compile(r"[\s,'<>?\-.!]+")
-SIZE_SUFFIX = re.compile(r"[-_](?:\d{1,4}px|\d{1,4}x|\d{1,4})$", re.I)
-
-
-def sanitize(stem):
-    name = stem
-    while SIZE_SUFFIX.search(name):
-        name = SIZE_SUFFIX.sub("", name)
-    return CHAT_DELIMITERS.sub("", name)
-
-
-def apply_prefix(name):
-    """cloudzUlt -> scCloudzUlt, FUCK -> scFuck, scFoo -> scFoo."""
-    if not PREFIX or not name:
-        return name
-    already = (name.startswith(PREFIX) and len(name) > len(PREFIX)
-               and name[len(PREFIX)].isupper())
-    if already:
-        return name
-    core = name.capitalize() if name.isupper() and len(name) > 1 else name[:1].upper() + name[1:]
-    return PREFIX + core
-
 
 def base_trigger_words():
     if not BASE_EMOTES_LUA.exists():
