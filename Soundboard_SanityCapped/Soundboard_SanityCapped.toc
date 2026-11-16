@@ -1,0 +1,10 @@
+## Interface: 120105, 120100, 120005, 16001
+## Title: Soundboard |cff8fd4ff+ Sanity Capped|r
+## Notes: Custom sound pack that plugs into Soundboard.|nDrop MP3s into Sounds and run tools/build_sounds.py.
+## Author: Sanity Capped
+## Version: 1.16
+## IconTexture: Interface\AddOns\Soundboard\icon
+## OptionalDeps: Soundboard
+
+SoundData.lua
+Core.lua

@@ -1,0 +1,11 @@
+{
+  "count": 1,
+  "sounds": [
+    {
+      "name": "scMlg",
+      "command": "/scmlg",
+      "file": "scMlg.mp3",
+      "seconds": 15.6
+    }
+  ]
+}
