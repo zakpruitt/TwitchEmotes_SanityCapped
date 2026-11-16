@@ -15,6 +15,9 @@ spring:
     max-file-size: 4MB
     max-request-size: 5MB
   threads.virtual.enabled: true
+  # Scripts and styles change with each deploy and import one another by plain
+  # path, so browsers check back every time instead of mixing old with new.
+  web.resources.cache.cachecontrol.no-cache: true
 
 server.port: ${PORT:8080}
 

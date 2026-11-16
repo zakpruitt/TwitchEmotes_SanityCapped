@@ -42,10 +42,10 @@ grid.addEventListener("click", async (event) => {
         return;
     }
 
-    const copy = event.target.closest(".copy");
-    if (!copy) return;
-    await navigator.clipboard.writeText(copy.closest(".sound").dataset.command);
-    flash(copy.querySelector(".cmd"), "copied!");
+    const card = event.target.closest(".sound");
+    if (!card) return;
+    await navigator.clipboard.writeText(card.dataset.command);
+    flash(card.querySelector(".name"), "copied!");
 });
 
 document.addEventListener("click", async (event) => {

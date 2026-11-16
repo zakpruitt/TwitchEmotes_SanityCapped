@@ -118,9 +118,8 @@ function approvedEmote(emote) {
 
 function approvedSound(sound) {
     return `
-    <div class="sound">
+    <div class="emote sound">
       <span class="name">${esc(sound.name)}</span>
-      <span class="cmd">${esc(sound.command)}</span>
       <span class="by">by ${esc(sound.uploader)} · ${esc(sound.seconds)}s</span>
       <audio controls preload="none" src="${esc(sound.url)}"></audio>
       <button class="danger small" data-remove="${esc(sound.id)}" data-kind="sound" data-name="${esc(sound.name)}">Remove</button>

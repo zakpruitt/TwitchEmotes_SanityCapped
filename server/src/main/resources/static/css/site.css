@@ -313,40 +313,15 @@ main.narrow {
 
 /* Sound grid -------------------------------------------------------------- */
 
-.sound {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    padding: 14px 12px 12px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: var(--panel);
-    text-align: center;
-}
-
+/* A sound card is an emote card with a play button where the picture goes. */
 .sound .play {
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
+    margin: 10px 0;
     padding: 0;
     border-radius: 50%;
-    font-size: 18px;
+    font-size: 15px;
     line-height: 1;
-}
-
-.sound .copy {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-    padding: 2px 4px;
-    border: 0;
-    background: none;
-    color: inherit;
-}
-
-.sound .copy:hover .cmd {
-    color: var(--accent-hover);
 }
 
 .cmd {
