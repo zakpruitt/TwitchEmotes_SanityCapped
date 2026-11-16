@@ -26,6 +26,10 @@ end
 
 local loadedCount = 0
 
+-- The release also carries the sound pack, and plenty of people only want
+-- that. Without TwitchEmotes this addon stays quiet and does nothing.
+local baseMissing = false
+
 local function MergeEmotes()
 	-- [emote key] = "Interface\AddOns\...\Foo.tga:28:28"
 	for key, path in pairs(ns.pack) do
@@ -210,7 +214,9 @@ SLASH_SANITYEMOTES1 = "/tesc"
 SLASH_SANITYEMOTES2 = "/sanityemotes"
 SlashCmdList["SANITYEMOTES"] = function(msg)
 	msg = (msg or ""):lower():match("^%s*(.-)%s*$")
-	if msg == "list" then
+	if baseMissing then
+		info("the TwitchEmotes addon isn't installed or is disabled, so the emotes are off.")
+	elseif msg == "list" then
 		ShowList()
 	else
 		info(loadedCount .. " emote(s) loaded. |cffaaaaaa/tesc list|r to see them all.")
@@ -229,8 +235,7 @@ f:SetScript("OnEvent", function(self)
 	if type(TwitchEmotes_defaultpack) ~= "table"
 		or type(TwitchEmotes_emoticons) ~= "table"
 		or type(TwitchEmotes_animation_metadata) ~= "table" then
-		warn("the TwitchEmotes addon is missing or disabled, so no custom "
-			.. "emotes were loaded.")
+		baseMissing = true
 		return
 	end
 

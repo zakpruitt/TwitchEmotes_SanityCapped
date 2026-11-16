@@ -5,7 +5,7 @@
 ## Version: 1.16
 ## X-Curse-Project-ID: 1809881
 ## IconTexture: Interface\AddOns\TwitchEmotes\Emotes\1337.tga
-## Dependencies: TwitchEmotes
+## OptionalDeps: TwitchEmotes
 
 EmoteData.lua
 Core.lua
