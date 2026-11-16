@@ -1,17 +1,19 @@
 # Twitch Emotes: Sanity Capped
 
-A custom emote pack for the TwitchEmotes addon. It adds the guild's emotes without modifying TwitchEmotes, so both update independently.
+A custom emote pack for the TwitchEmotes addon, plus a sound pack for the Soundboard addon. Each adds the guild's own content without modifying the addon it plugs into, so both update independently.
 
-Works on retail and WoW: Forever. Both install the same release, so the emotes are always identical on the two.
+Works on retail and WoW: Forever. Both install the same release, so the emotes and sounds are always identical on the two.
 
 ## Installation
 
-1. Install TwitchEmotes for the game you play (retail or Forever).
+1. Install TwitchEmotes for the emotes, Soundboard for the sounds, or both.
 2. In WoWUp, go to **Get Addons → Install from URL** and paste:
    ```
    https://github.com/zakpruitt/TwitchEmotes_SanityCapped
    ```
-3. Turn on auto-update for the addon so new emotes arrive on their own.
+3. Turn on auto-update for the addon so new emotes and sounds arrive on their own.
+
+The emotes and the sounds are independent. Whichever of TwitchEmotes and Soundboard you don't have, that half stays quiet and the other works as normal.
 
 Everyone needs the pack to see the emotes. Anyone without it just sees the text, like `scFuck`.
 
@@ -23,6 +25,19 @@ Type an emote name in chat, or pick one from the `:` autocomplete or the emote d
 | ------------ | --------------------------------- |
 | `/tesc`      | Show how many emotes loaded       |
 | `/tesc list` | List every emote with its icon    |
+
+## Sounds
+
+The install adds a second addon folder, `Soundboard_SanityCapped`, which puts the guild's sounds in Soundboard under a **Sanity Capped** category. Play one from the Soundboard menu or type its command, like `/scmlg`. Everyone in your party, raid or guild who has the pack hears it.
+
+| Command          | Description                  |
+| ---------------- | ---------------------------- |
+| `/scsounds`      | Show how many sounds loaded  |
+| `/scsounds list` | List every sound's command   |
+
+Sounds are MP3s up to 20 seconds. Add them through the site, the same as emotes: once approved, the MP3 is committed to `Soundboard_SanityCapped/Sounds/` and a release is built. To test locally, drop an MP3 in that folder and run `python tools/build_sounds.py` (no dependencies).
+
+A sound's name follows the emote rules below, then drops everything but letters and digits, because it becomes a slash command: `vine boom!.mp3` is `scVineboom`, typed `/scvineboom`.
 
 ## Adding Emotes
 
@@ -52,7 +67,7 @@ The file name becomes the chat trigger word:
 - Characters chat splits on (spaces and `, ' < > ? - . !`) are removed.
 - Everything gets an `sc` prefix. All-caps names are title-cased.
 
-The same rules live in `tools/build_emotes.py`, `server/.../Naming.java` and `server/.../naming.js`. Change all three together.
+The same rules live in `tools/naming.py`, `server/.../Naming.java` and `server/.../naming.js`. Change all three together.
 
 ## Per-Emote Options
 
@@ -79,13 +94,18 @@ Core.lua                       hooks the pack into TwitchEmotes
 EmoteData.lua                  generated emote table
 Emotes/                        generated .tga textures (what WoW loads)
 TwitchEmotes_SanityCapped.toc
+Soundboard_SanityCapped/       the sound pack, a second addon in the same zip
+  Sounds/                      the MP3s, the source of truth
+  SoundData.lua                generated sound table
 tools/source/                  original images, the source of truth
 tools/build_emotes.py          converts source images into textures
+tools/build_sounds.py          lists the MP3s and measures their length
+tools/naming.py                naming rules shared by both builds
 server/                        the upload and approval site
 .github/workflows/release.yml  builds and publishes releases
 ```
 
-Only the `.toc`, Lua files and `Emotes/` ship in the release zip.
+Only the `.toc`, Lua files, `Emotes/` and `Soundboard_SanityCapped/` ship in the release zip.
 
 <!-- portfolio
 name: Sanity Capped Emotes
