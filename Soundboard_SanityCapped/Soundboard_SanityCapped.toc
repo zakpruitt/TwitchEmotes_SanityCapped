@@ -2,7 +2,7 @@
 ## Title: Soundboard |cff8fd4ff+ Sanity Capped|r
 ## Notes: Custom sound pack that plugs into Soundboard.|nDrop MP3s into Sounds and run tools/build_sounds.py.
 ## Author: Sanity Capped
-## Version: 1.16
+## Version: 1.17
 ## IconTexture: Interface\AddOns\Soundboard\icon
 ## OptionalDeps: Soundboard
 
